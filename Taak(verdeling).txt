@@ -1,0 +1,20 @@
+Taken:
+API Pullen en bruikbaar maken
+GUI ontwerpen
+Graphics maken/opzoeken en toestemming vragen
+Flowcharts
+
+code:
+GUI coderen
+
+Functies:
+puntenberekening
+willekeurige superheld
+api informatie omzetten in bruikbare hint
+→ superheld anonimiseren
+willekeurige hint
+Optioneel:
+tijdpenaltie
+puntenaftrek per tijdpenaltie
+code lampjes bij fout
+code lampjes bij naderende tijdpenaltie
