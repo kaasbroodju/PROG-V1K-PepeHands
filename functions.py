@@ -1,11 +1,16 @@
 import random
+
+#{'name':iron,'desc':{desc:'', comics:[], films:[]}
+#API dataset template^
+
+
 def modeSelection():
     '''Selects mode'''
     return
 
 
 def checkAnswerOpen(answerString, correctAnswer):
-    '''Checks answer for open/normal mode. Takes; user answer (string), correct answer (string)'''
+    '''Checks answer for open/normal mode. Takes; user answer (string), correct answer (string). Returns boolean, True if correct, False if wrong'''
     if answerString = correctAnswer:
         rightAnswer = True
     else:
@@ -14,17 +19,13 @@ def checkAnswerOpen(answerString, correctAnswer):
 
 
 def checkAnswerMultipleChoice(answer, correctAnswer):
-    '''Checks answer for multiple choice/easy mode. Takes; user answer (int 1-10), correct answer (int 1-10)'''
+    '''Checks answer for multiple choice/easy mode. Takes; user answer (int 1-10), correct answer (int 1-10). Returns boolean, True if correct, False if wrong.'''
     if answer = correctAnswer:
         rightAnswer = True
     else:
         rightAnswer = False
     return rightAnswer
 
-
-def randomHero():
-    '''Selects random hero from dataset'''
-    return
 
 
 def apiConversion():
