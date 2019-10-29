@@ -22,6 +22,7 @@ class hintButton(Textbutton):
             getHintOutput = functions.getHint(?dataset?, previousHintType) #Dataset moet zegmaar de data uit de api zijn met {'name':iron,'desc':{description:'', comics:[], films:[]}
             previousHintType = getHintOutput[1]                            #Dit moet uitgevoerd worden wanneer op de knop gedrukt wordt
             hint = getHintOutput[0]                                        #Eventueel moet ook points() er nog bij maar idunno -Rick
+            currentPoints = functions.points()
 
         
 
