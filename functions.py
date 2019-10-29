@@ -58,22 +58,15 @@ def points():
     points = 25
     if difficulty == True:              ##checks difficulty##
         checkAnswerMultipleChoice()     ##checks answer##
-        if rightAnswer == True:
-            points = points + 25
         if rightAnswer == False:        ##checks answer and assigns points depending on the answer##
             points = points - 1
         if randomHint():                ##if hint is asked, subtracts 3 points##
             points = points - 3
     if difficulty == False:             ##checks difficulty##
         checkAnswerOpen()               ##checks answer##
-        if rightAnswer == True:
-            points = points + 25
         if rightAnswer == False:        ##checks answer and assigns points depending on the answer##
             points = points - 1
         if randomHint():                ##if hint is asked, subtracts 3 points##
             points = points - 3
-
-
-
     return points
 
