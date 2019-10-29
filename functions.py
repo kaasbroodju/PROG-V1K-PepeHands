@@ -19,7 +19,6 @@ def checkAnswerOpen(answerString, correctAnswer):
 
 
 def checkAnswerMultipleChoice(answer, correctAnswer):
-    '''Checks answer for multiple choice/easy mode. Takes; user answer (int 1-10), correct answer (int 1-10). Returns boolean, True if correct, False if wrong.'''
     if answer == correctAnswer:
         rightAnswer = True
     else:
@@ -47,5 +46,17 @@ def getHint(dataset, prevHintType):
 def points():
     '''Starts on 25 and removes 1 for every wrong answer, 3 for every hint. Maybe boolean argument for "hint" or smth if false it must be a wrong answer so you remove 1, if true remove 3'''
     points = 25
+    if difficulty == True:              ##checks difficulty##
+        checkAnswerMultipleChoice()     ##checks answer##
+        if rightAnswer == False:        ##checks answer and assigns points depending on the answer##
+            points = points - 1
+        if randomHint():                ##if hint is asked, subtracts 3 points##
+            points = points - 3
+    if difficulty == False:             ##checks difficulty##
+        checkAnswerOpen()               ##checks answer##
+        if rightAnswer == False:        ##checks answer and assigns points depending on the answer##
+            points = points - 1
+        if randomHint():                ##if hint is asked, subtracts 3 points##
+            points = points - 3
     return points
 
