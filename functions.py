@@ -4,16 +4,22 @@ def modeSelection():
     return
 
 
-def checkAnswerOpen():
-    '''Checks answer for open/normal mode'''
-    res = ''
-    return res
+def checkAnswerOpen(answerString, correctAnswer):
+    '''Checks answer for open/normal mode. Takes; user answer (string), correct answer (string)'''
+    if answerString = correctAnswer:
+        rightAnswer = True
+    else:
+        rightAnswer = False
+    return rightAnswer
 
 
-def checkAnswerMultipleChoice():
-    '''Checks answer for multiple choice/easy mode'''
-    res = ''
-    return res
+def checkAnswerMultipleChoice(answer, correctAnswer):
+    '''Checks answer for multiple choice/easy mode. Takes; user answer (int 1-10), correct answer (int 1-10)'''
+    if answer = correctAnswer:
+        rightAnswer = True
+    else:
+        rightAnswer = False
+    return rightAnswer
 
 
 def randomHero():
