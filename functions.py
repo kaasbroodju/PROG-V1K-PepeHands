@@ -1,17 +1,12 @@
 import random
-
-#{'name':iron,'desc':{desc:'', comics:[], films:[]}
-#API dataset template^
-
-
 def modeSelection():
     '''Selects mode'''
     return
 
 
 def checkAnswerOpen(answerString, correctAnswer):
-    '''Checks answer for open/normal mode. Takes; user answer (string), correct answer (string). Returns boolean, True if correct, False if wrong'''
-    if answerString = correctAnswer:
+    '''Checks answer for open/normal mode. Takes; user answer (string), correct answer (string)'''
+    if answerString == correctAnswer:
         rightAnswer = True
     else:
         rightAnswer = False
@@ -19,13 +14,17 @@ def checkAnswerOpen(answerString, correctAnswer):
 
 
 def checkAnswerMultipleChoice(answer, correctAnswer):
-    '''Checks answer for multiple choice/easy mode. Takes; user answer (int 1-10), correct answer (int 1-10). Returns boolean, True if correct, False if wrong.'''
-    if answer = correctAnswer:
+    '''Checks answer for multiple choice/easy mode. Takes; user answer (int 1-10), correct answer (int 1-10)'''
+    if answer ==correctAnswer:
         rightAnswer = True
     else:
         rightAnswer = False
     return rightAnswer
 
+
+def randomHero():
+    '''Selects random hero from dataset'''
+    return
 
 
 def apiConversion():
@@ -45,6 +44,7 @@ def randomHint():
 
 def points():
     '''Starts on 25 and removes 1 for every wrong answer, 3 for every hint. Maybe boolean argument for "hint" or smth if false it must be a wrong answer so you remove 1, if true remove 3'''
-    points = 25
+
+
     return points
 
