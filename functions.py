@@ -10,17 +10,8 @@ def modeSelection():
 
 
 def checkAnswerOpen(answerString, correctAnswer):
-<<<<<<< Updated upstream
     '''Checks answer for open/normal mode. Takes; user answer (string), correct answer (string). Returns boolean, True if correct, False if wrong'''
-<<<<<<< HEAD
     if answerString == correctAnswer:
-=======
-    if answerString = correctAnswer:
-=======
-    '''Checks answer for open/normal mode. Takes; user answer (string), correct answer (string)'''
-    if answerString == correctAnswer:
->>>>>>> Stashed changes
->>>>>>> origin/master
         rightAnswer = True
     else:
         rightAnswer = False
@@ -28,17 +19,8 @@ def checkAnswerOpen(answerString, correctAnswer):
 
 
 def checkAnswerMultipleChoice(answer, correctAnswer):
-<<<<<<< Updated upstream
-    '''Checks answer for multiple choice/easy mode. Takes; user answer (int 1-10), correct answer (int 1-10). Returns boolean, True if correct, False if wrong.'''
-<<<<<<< HEAD
-    if answer == correctAnswer:
-=======
-    if answer = correctAnswer:
-=======
     '''Checks answer for multiple choice/easy mode. Takes; user answer (int 1-10), correct answer (int 1-10)'''
-    if answer ==correctAnswer:
->>>>>>> Stashed changes
->>>>>>> origin/master
+    if answer == correctAnswer:
         rightAnswer = True
     else:
         rightAnswer = False
