@@ -1,6 +1,6 @@
 import random
 
-#{'name':iron,'desc':{desc:'', comics:[], films:[]}
+#{'name':iron,'desc':{description:'', comics:[], films:[]}
 #API dataset template^
 
 
@@ -10,13 +10,8 @@ def modeSelection():
 
 
 def checkAnswerOpen(answerString, correctAnswer):
-<<<<<<< Updated upstream
     '''Checks answer for open/normal mode. Takes; user answer (string), correct answer (string). Returns boolean, True if correct, False if wrong'''
-    if answerString = correctAnswer:
-=======
-    '''Checks answer for open/normal mode. Takes; user answer (string), correct answer (string)'''
     if answerString == correctAnswer:
->>>>>>> Stashed changes
         rightAnswer = True
     else:
         rightAnswer = False
@@ -24,18 +19,11 @@ def checkAnswerOpen(answerString, correctAnswer):
 
 
 def checkAnswerMultipleChoice(answer, correctAnswer):
-<<<<<<< Updated upstream
-    '''Checks answer for multiple choice/easy mode. Takes; user answer (int 1-10), correct answer (int 1-10). Returns boolean, True if correct, False if wrong.'''
-    if answer = correctAnswer:
-=======
-    '''Checks answer for multiple choice/easy mode. Takes; user answer (int 1-10), correct answer (int 1-10)'''
-    if answer ==correctAnswer:
->>>>>>> Stashed changes
+    if answer == correctAnswer:
         rightAnswer = True
     else:
         rightAnswer = False
     return rightAnswer
-
 
 
 def apiConversion():
@@ -48,8 +36,10 @@ def anonimisation():
     return
 
 
-def randomHint():
-    '''Takes set of hints, possibly per category, and selects a random hint.'''
+def getHint(dataset, prevHintType):
+    '''Takes Dataset, previous hint type, returns list of [hint, hintType], first hint always description'''
+    hintTypes = ['Description', 'Films', 'Comics', 'etc.']
+
     return
 
 
