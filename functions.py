@@ -1,3 +1,4 @@
+import random
 def modeSelection():
     return
 
@@ -21,10 +22,12 @@ def apiConversion():
 
 
 def anonimisation():
+    #Takes hero's name and removes from any hint text. For example replace with [data redacted].
     return
 
 
 def randomHint():
+    #Takes set of hints, possibly per category, and selects a random hint.
     return
 
 
