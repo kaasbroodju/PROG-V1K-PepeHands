@@ -1,4 +1,5 @@
 import arcade
+import functions
 
 
 # Set up the constants
@@ -6,6 +7,23 @@ WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 WINDOW_TITLE = "Marvel"
 WINDOW_BACKGROUND_COLOR = arcade.color.BLACK
+
+class hintButton(Textbutton):
+    def __init__ (self, game, x=0, y=0, width=100, height=40, text="`Hint`", theme=None): #Dit moet nog gechecked worden
+        super().__init__(x, y, width, height, text, theme=theme)
+        self.game = game
+        previousHintType = 'None'
+
+    def on_press(self):
+        self.pressed = True
+    
+    def on_release(self):
+        if self.pressed:
+            getHintOutput = functions.getHint(?dataset?, previousHintType) #Dataset moet zegmaar de data uit de api zijn met {'name':iron,'desc':{description:'', comics:[], films:[]}
+            previousHintType = getHintOutput[1]                            #Dit moet uitgevoerd worden wanneer op de knop gedrukt wordt
+            hint = getHintOutput[0]                                        #Eventueel moet ook points() er nog bij maar idunno -Rick
+
+        
 
 
 class MyGame(arcade.Window):
