@@ -49,7 +49,7 @@ def get_character(with_description=False):
     '''
     grabs a charachter out of the Marvel API
     with_description = defalt False (bool optional)
-    returns {'name':'iron man', 'desc':{'desc':'', 'comics':[], 'films':[]}}
+    returns {'name':'iron man', 'desc':{'desc':'', 'comics':[]}}
     '''
     json_file = get_json_file()
     nummer = random.randint(0, json_file['data']['count'] - 1)
