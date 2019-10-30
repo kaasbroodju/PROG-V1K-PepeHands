@@ -158,12 +158,8 @@ class MyGame(arcade.Window):
                 else:
                     print(self.name)
                     self.name += str(chr(key))
-                    print(self.name)
             elif key == arcade.key.BACKSPACE:
-                print('minus')
                 self.name = self.name[:-1]
-            '''elif key == arcade.key.ENTER and len(self.name) >= 3:
-                self.state = State.mode'''
 
     def on_key_release(self, key, modifiers):
         pass
