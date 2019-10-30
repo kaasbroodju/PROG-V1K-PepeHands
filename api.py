@@ -49,7 +49,7 @@ def get_character(with_description=False):
     '''
     grabs a charachter out of the Marvel API
     with_description = defalt False (bool optional)
-    returns {'name':'iron man', 'desc':{'desc':'', 'comics':[], 'films':[]}}
+    returns {'name':'iron man', 'desc':{'desc':'', 'comics':[]}}
     '''
     json_file = get_json_file()
     nummer = random.randint(0, json_file['data']['count'] - 1)
@@ -69,8 +69,7 @@ def get_character(with_description=False):
                     series_appeared.append(series['name'])
                 return {'name':character_sheet['data']['results'][0]['name'], 
                         'desc':{'desc':character_sheet['data']['results'][0]['description'],
-                                'comics':series_appeared,
-                                'films':[]}}
+                                'comics':series_appeared}}
             else:
                 #zoek nieuw character
                 nummer = random.randint(0, json_file['data']['count'] - 1)
@@ -83,8 +82,9 @@ def get_character(with_description=False):
                 character_sheet = get_json_file(json_file_comic_methode['data']['results'][0]['characters']['items'][nummer3]['resourceURI'])
     else:
         #return name with empty dictionary
-        return {'name':character_sheet['data']['results'][0]['name'], 'desc':{'desc':'', 'comics':[], 'films':[]}}
-
+        return {'name':character_sheet['data']['results'][0]['name'], 
+                'desc':{'desc':'',
+                        'comics':[]}}
 
 """
 TODO:
