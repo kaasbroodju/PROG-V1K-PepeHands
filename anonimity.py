@@ -9,7 +9,7 @@ print('desc'.replace("name", "This character"+', '+'desc'))
 
 #deze werkt denk ik
     for 'name' in get_character('desc'):
-        print('name'.replace('name', "This character"))
+        print('desc'.replace('name', "This character"))
 
 
     for 'name' in get_character('name'):
