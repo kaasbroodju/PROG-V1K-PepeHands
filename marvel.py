@@ -2,6 +2,7 @@ import arcade
 from enum import Enum
 import functions
 import api
+import random
 
 
 # Set up the constants
@@ -107,10 +108,10 @@ class MyGame(arcade.Window):
         self.possible_answer_buttons = arcade.SpriteList()
         self.test = api.get_character()['name']
         print(type(self.test))
-        self.possible_answer_buttons.append(CharacterButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', self.test)) #todo aparte
         self.timer = int()
         self.delta_timer = float()
         self.score = int()
+        self.characterList = []
 
     def on_draw(self):
         """ Called whenever we need to draw the window. """
@@ -150,10 +151,11 @@ class MyGame(arcade.Window):
     def on_key_press(self, key, modifiers):
         """ Called whenever the user presses a key. """
         if self.state == State.title_screen:
+            print(modifiers)
             print('pass')
-            if key != arcade.key.BACKSPACE and chr(key).lower() in 'abcdefghijklmnopqrstuvwxyz' and len(self.name) < 10: #geen back space en filter
+            if key != arcade.key.BACKSPACE and chr(key).lower() in 'abcdefghijklmnopqrstuvwxyz1234567890' and len(self.name) < 10: #geen back space en filter
                 print('nieuw letter')
-                if modifiers == 17: #shift voor hoofdletter
+                if modifiers == 17 or modifiers == 1: #shift voor hoofdletter
                     self.name += str(chr(key)).upper()
                 else:
                     print(self.name)
@@ -185,6 +187,27 @@ class MyGame(arcade.Window):
             cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.difficulty_buttons)
             for button in cursor_collides_with:
                 self.state = button.state
+                if button.state == State.easy:
+                    self.correctCharacter = api.get_character(True)
+                    self.characterList.append(self.correctCharacter['name'])
+                    for i in range(0, 9):
+                        self.character = api.get_character()
+                        safety = 0
+                        while self.character['name'] in self.characterList:
+                            self.character = api.get_character()
+                            safety += 1
+                            if safety == 10: #Make sure we dont infinitely keep requesting from API (daily limit)
+                                break
+                        self.characterList.append(self.character['name'])
+                    print(self.characterList)
+                    random.shuffle(self.characterList)
+                    print(self.characterList)
+                    for index in self.characterList:
+                        if self.characterList.index(index) < 5:
+                            self.possible_answer_buttons.append(CharacterButton(WINDOW_WIDTH/8, WINDOW_HEIGHT/6 * (self.characterList.index(index) + 1), 'Button.png', index))
+                        else:
+                            self.possible_answer_buttons.append(CharacterButton(WINDOW_WIDTH/8*7, WINDOW_HEIGHT/6 * (self.characterList.index(index) - 4), 'Button.png', index))
+
 
 
 def main():
