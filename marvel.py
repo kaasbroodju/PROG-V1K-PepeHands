@@ -59,17 +59,24 @@ class CharacterButton(arcade.Sprite):
         self.center_y = y
         self.character = name
 
+    def draw_text(self):
+        arcade.draw_text(self.character, self.center_x, self.center_y, arcade.color.BLACK, align="center", anchor_x="center", anchor_y="center")
+
 class StateButton(arcade.Sprite):
     '''
     a button that changes the state
     '''
-    def __init__(self, x, y, sprite, state):
+    def __init__(self, x, y, sprite, state, text=''):
         super().__init__()
         self.sprite = sprite
         self.texture = arcade.load_texture(self.sprite, scale=0.1)
         self.center_x = x
         self.center_y = y
         self.state = state
+        self.text = text
+
+    def draw_text(self):
+        arcade.draw_text(self.text, self.center_x, self.center_y, arcade.color.BLACK, align="center", anchor_x="center", anchor_y="center")
 
 class Cursor(arcade.Sprite):
     '''invisable cursor as long you dont draw'''
@@ -90,13 +97,13 @@ class MyGame(arcade.Window):
         self.state = State.title_screen
         self.name = str()
         self.mode_buttons = arcade.SpriteList()
-        self.mode_buttons.append(StateButton(WINDOW_WIDTH/4 * 1, WINDOW_HEIGHT/2, 'Button.png', State.choose_difficulty))
-        self.mode_buttons.append(StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.leaderboard))
+        self.mode_buttons.append(StateButton(WINDOW_WIDTH/4 * 1, WINDOW_HEIGHT/2, 'Button.png', State.choose_difficulty, 'start'))
+        self.mode_buttons.append(StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.leaderboard, 'leaderboard'))
         self.cursor = Cursor(0, 0, '1 pixel voor muis-1.png.png')
-        self.submit_name_button = StateButton(500, 400, 'Button.png', State.mode)
+        self.submit_name_button = StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.mode, 'ok')
         self.difficulty_buttons = arcade.SpriteList()
-        self.difficulty_buttons.append(StateButton(WINDOW_WIDTH/4 * 1, WINDOW_HEIGHT/2, 'Button.png', State.easy))
-        self.difficulty_buttons.append(StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.hard))
+        self.difficulty_buttons.append(StateButton(WINDOW_WIDTH/4 * 1, WINDOW_HEIGHT/2, 'Button.png', State.easy, 'easy'))
+        self.difficulty_buttons.append(StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.hard, 'hard'))
         self.possible_answer_buttons = arcade.SpriteList()
         self.test = api.get_character()['name']
         print(type(self.test))
@@ -111,20 +118,23 @@ class MyGame(arcade.Window):
         arcade.start_render()
         self.background.draw()
         if self.state == State.title_screen:
-            arcade.draw_text(self.name, WINDOW_WIDTH/2,WINDOW_HEIGHT/2,arcade.color.BLACK, 36, bold=True)
+            arcade.draw_text('name: ' + self.name, WINDOW_WIDTH/12,WINDOW_HEIGHT/2,arcade.color.BLACK, 32, bold=True)
             self.submit_name_button.draw()
+            self.submit_name_button.draw_text()
         elif self.state == State.mode:
             for button in self.mode_buttons:
                 button.draw()
+                button.draw_text()
         elif self.state == State.choose_difficulty:
             arcade.draw_text('difficuly', WINDOW_WIDTH/2, WINDOW_HEIGHT/4 *3, arcade.color.BLACK)
             for button in self.difficulty_buttons:
                 button.draw()
+                button.draw_text()
         elif self.state == State.easy:
             arcade.draw_text('easy', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
             for button in self.possible_answer_buttons:
                 button.draw()
-                arcade.draw_text(button.character, button.center_x, button.center_y, arcade.color.BLACK, align="center", anchor_x="center", anchor_y="center")
+                button.draw_text()
         elif self.state == State.hard:
             pass
         elif self.state == State.leaderboard:
