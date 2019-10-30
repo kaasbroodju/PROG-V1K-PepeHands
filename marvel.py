@@ -144,7 +144,7 @@ class MyGame(arcade.Window):
                 button.draw_text()
         elif self.state == State.easy:
             arcade.draw_text('easy', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text(self.description, WINDOW_WIDTH/2, WINDOW_HEIGHT/4 * 2.5, arcade.color.BLACK, 36, bold=True, align="center", anchor_x="center", anchor_y="center", width=WINDOW_WIDTH/2.5)
+            arcade.draw_text(self.description, WINDOW_WIDTH/2, WINDOW_HEIGHT/4 * 2.5, arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=WINDOW_WIDTH/2.5)
             arcade.draw_text(str(self.score), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 * 2,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 ,arcade.color.BLACK, 36, bold=True)
             for button in self.possible_answer_buttons:
@@ -152,7 +152,7 @@ class MyGame(arcade.Window):
                 button.draw_text()
         elif self.state == State.hard:
             arcade.draw_text('hard', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 36, bold=True, align="center", anchor_x="center", anchor_y="center", width=WINDOW_WIDTH/2.5)
+            arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=WINDOW_WIDTH/2.5)
             arcade.draw_text(str(self.score), WINDOW_WIDTH/4,WINDOW_HEIGHT/4 * 3,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/4 * 3,WINDOW_HEIGHT/4 * 3 ,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text('hier komt de usr input te staan', WINDOW_WIDTH/8,WINDOW_HEIGHT/4 ,arcade.color.BLACK, 36, bold=True)
@@ -238,9 +238,12 @@ class MyGame(arcade.Window):
             cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.difficulty_buttons)
             for button in cursor_collides_with:
                 self.state = button.state
+                self.timer = 0
                 if button.state == State.easy:
                     self.correctCharacter = api.get_character(True)
+                    print(self.correctCharacter)
                     self.characterList.append(self.correctCharacter['name'])
+                    self.description = self.correctCharacter['desc']['desc']
                     for i in range(0, 9):
                         self.character = api.get_character()
                         """

@@ -65,8 +65,8 @@ def get_character(with_description=False):
             if character_sheet['data']['results'][0]['description'] != '':
                 # zoekt andere character waarbij character in dezelfde comic zat
                 list_of_characters_in_comic = list()
-                if json_file_comic_methode['data']['results'][0]['characters']['returned'] != 0:
-                    for i in range(0, json_file_comic_methode['data']['results'][0]['characters']['returned'] -1):
+                if json_file_comic_methode['data']['results'][0]['characters']['returned'] > 0:
+                    for i in range(0, json_file_comic_methode['data']['results'][0]['characters']['returned']):
                         other_character_name = json_file_comic_methode['data']['results'][0]['characters']['items'][i]['name'] 
                         #TODO filter nog toevoegen voor character name
                         if other_character_name != character_sheet['data']['results'][0]['name']:
@@ -77,9 +77,9 @@ def get_character(with_description=False):
                 # zoekt andere character waarbij character in dezelfde serie zat
                 series_vervolgd = get_json_file(character_sheet['data']['results'][0]['series']['items'][nummer5]['resourceURI'])
                 list_of_characters_in_series = list()
-                if series_vervolgd['data']['results'][0]['characters']['returned'] != 0:
-                    for i in range(0, series_vervolgd['data']['results'][0]['characters']['returned'] - 1):
-                        other_character_name = json_file_comic_methode['data']['results'][0]['characters']['items'][i]['name'] 
+                if series_vervolgd['data']['results'][0]['characters']['returned'] > 0:
+                    for i in range(0, series_vervolgd['data']['results'][0]['characters']['returned']):
+                        other_character_name = series_vervolgd['data']['results'][0]['characters']['items'][i]['name'] 
                         #TODO filter nog toevoegen voor other character name
                         if other_character_name != character_sheet['data']['results'][0]['name']:
                             list_of_characters_in_series.append('this character appeared in the same comic as ' + other_character_name)
