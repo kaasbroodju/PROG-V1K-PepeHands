@@ -73,7 +73,7 @@ class MyGame(arcade.Window):
         """ Constructor. """
         super().__init__(width, height, title, resizable=True)
         arcade.set_background_color(WINDOW_BACKGROUND_COLOR)
-        self.background = Background(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 'iron man startscherm-1.png.png')
+        self.background = Background(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 'startscherm hoofd-1.png.png')
         self.state = State.title_screen
         self.name = str()
         self.mode_buttons = arcade.SpriteList()
