@@ -13,9 +13,10 @@ WINDOW_BACKGROUND_COLOR = arcade.color.BLACK
 class State(Enum):
     title_screen = 0
     mode = 1
-    easy = 2
-    hard = 3
-    leaderboard = 4
+    choose_difficulty = 2
+    leaderboard = 3
+    easy = 4
+    hard = 5
 
 class Background(arcade.Sprite):
     def __init__(self, x, y, sprite):
@@ -46,6 +47,18 @@ class hintButton(Textbutton):
 '''
 
 
+class CharacterButton(arcade.Sprite):
+    '''
+    #TODO: documenteer class
+    '''
+    def __init__(self, x, y, sprite, name):
+        super().__init__()
+        self.sprite = sprite
+        self.texture = arcade.load_texture(self.sprite, scale=0.2)
+        self.center_x = x
+        self.center_y = y
+        self.character = name
+
 class StateButton(arcade.Sprite):
     '''
     a button that changes the state
@@ -53,7 +66,7 @@ class StateButton(arcade.Sprite):
     def __init__(self, x, y, sprite, state):
         super().__init__()
         self.sprite = sprite
-        self.texture = arcade.load_texture(self.sprite)
+        self.texture = arcade.load_texture(self.sprite, scale=0.1)
         self.center_x = x
         self.center_y = y
         self.state = state
@@ -77,8 +90,20 @@ class MyGame(arcade.Window):
         self.state = State.title_screen
         self.name = str()
         self.mode_buttons = arcade.SpriteList()
-        self.mode_buttons.append(StateButton(300, 400, 'Button.png', State.easy))
-        self.cursor = Cursor(0, 0, 'Wrong.png')
+        self.mode_buttons.append(StateButton(WINDOW_WIDTH/4 * 1, WINDOW_HEIGHT/2, 'Button.png', State.choose_difficulty))
+        self.mode_buttons.append(StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.leaderboard))
+        self.cursor = Cursor(0, 0, '1 pixel voor muis-1.png.png')
+        self.submit_name_button = StateButton(500, 400, 'Button.png', State.mode)
+        self.difficulty_buttons = arcade.SpriteList()
+        self.difficulty_buttons.append(StateButton(WINDOW_WIDTH/4 * 1, WINDOW_HEIGHT/2, 'Button.png', State.easy))
+        self.difficulty_buttons.append(StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.hard))
+        self.possible_answer_buttons = arcade.SpriteList()
+        self.test = api.get_character()['name']
+        print(type(self.test))
+        self.possible_answer_buttons.append(CharacterButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', self.test)) #todo aparte
+        self.timer = int()
+        self.delta_timer = float()
+        self.score = int()
 
     def on_draw(self):
         """ Called whenever we need to draw the window. """
@@ -87,11 +112,19 @@ class MyGame(arcade.Window):
         self.background.draw()
         if self.state == State.title_screen:
             arcade.draw_text(self.name, WINDOW_WIDTH/2,WINDOW_HEIGHT/2,arcade.color.BLACK, 36, bold=True)
+            self.submit_name_button.draw()
         elif self.state == State.mode:
             for button in self.mode_buttons:
                 button.draw()
+        elif self.state == State.choose_difficulty:
+            arcade.draw_text('difficuly', WINDOW_WIDTH/2, WINDOW_HEIGHT/4 *3, arcade.color.BLACK)
+            for button in self.difficulty_buttons:
+                button.draw()
         elif self.state == State.easy:
-            pass
+            arcade.draw_text('easy', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
+            for button in self.possible_answer_buttons:
+                button.draw()
+                arcade.draw_text(button.character, button.center_x, button.center_y, arcade.color.BLACK, align="center", anchor_x="center", anchor_y="center")
         elif self.state == State.hard:
             pass
         elif self.state == State.leaderboard:
@@ -99,13 +132,16 @@ class MyGame(arcade.Window):
     
     def update(self, delta_time):
         """ Called to update our objects. Happens approximately 60 times per second. """
-        pass
+        self.delta_timer += delta_time
+        if self.delta_timer >= 1:
+            self.timer += 1
+            self.delta_timer = 0
 
     def on_key_press(self, key, modifiers):
         """ Called whenever the user presses a key. """
         if self.state == State.title_screen:
             print('pass')
-            if key != arcade.key.BACKSPACE and chr(key).lower() in 'abcdefghijklmnopqrstuvwxyz': #geen back space en filter
+            if key != arcade.key.BACKSPACE and chr(key).lower() in 'abcdefghijklmnopqrstuvwxyz' and len(self.name) < 10: #geen back space en filter
                 print('nieuw letter')
                 if modifiers == 17: #shift voor hoofdletter
                     self.name += str(chr(key)).upper()
@@ -116,15 +152,15 @@ class MyGame(arcade.Window):
             elif key == arcade.key.BACKSPACE:
                 print('minus')
                 self.name = self.name[:-1]
-            elif key == arcade.key.ENTER and len(self.name) >= 3:
-                self.state = State.mode
+            '''elif key == arcade.key.ENTER and len(self.name) >= 3:
+                self.state = State.mode'''
 
     def on_key_release(self, key, modifiers):
         pass
 
     def on_mouse_motion(self, x, y, dx, dy):
-        self.cursor.x = x
-        self.cursor.y = y 
+        self.cursor.center_x = x
+        self.cursor.center_y = y 
 
     def on_mouse_release(self, x, y, button, modifiers):
         print(button)
@@ -132,6 +168,14 @@ class MyGame(arcade.Window):
             cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.mode_buttons)
             for button in cursor_collides_with:
                 self.state = button.state
+        elif self.state == State.title_screen:
+            if arcade.check_for_collision(self.cursor, self.submit_name_button) and len(self.name) >= 3:
+                self.state = self.submit_name_button.state
+        elif self.state == State.choose_difficulty:
+            cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.difficulty_buttons)
+            for button in cursor_collides_with:
+                self.state = button.state
+
 
 def main():
     """ Create an instance of our game window and start the Arcade game loop. """
