@@ -2,24 +2,8 @@
     "data": {
         "players": [
             {
-                "name": "morris",
-                "score": 260
-            },
-            {
-                "name": "rick",
-                "score": 200
-            },
-            {
-                "name": "jean",
+                "name": "( ͡° ͜ʖ ͡°)",
                 "score": 175
-            },
-            {
-                "name": "jasper",
-                "score": 175
-            },
-            {
-                "name": "susan",
-                "score": 50
             }
         ]
     }

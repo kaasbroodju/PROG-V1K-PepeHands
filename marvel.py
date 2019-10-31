@@ -122,7 +122,7 @@ class MyGame(arcade.Window):
         self.delta_timer = float()
         self.score = 25
         self.characterList = list()
-        self.back_to_main_menu_button = StateButton(WINDOW_WIDTH/4, WINDOW_HEIGHT/4 * 3, 'Button.png', State.mode, 'back to main menu')
+        self.back_to_main_menu_button = StateButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/4 * 3, 'Button.png', State.mode, 'main menu')
         self.leaderboard_list = list() #TODO: list with all the score paired with the names [[name, score], [name, score]] (SUSAN)
         self.description = 'hier komt de hint te staan'
         self.hint_penalty = int()
@@ -190,20 +190,20 @@ class MyGame(arcade.Window):
             if len(self.leaderboard_list) >= 10:
                 for i in range(0, 10):
                     if i < 5:
-                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 0.5, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i+1)), arcade.color.BLACK, 22, bold=True)
+                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 0.5, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i+1)), arcade.color.WHITE, 22, bold=True)
                     else:
-                            arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 6, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i-4)), arcade.color.BLACK, 22, bold=True)
+                            arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 6, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i-4)), arcade.color.WHITE, 22, bold=True)
 
             else:
                 for i in range(0, len(self.leaderboard_list)):
                     if i < 5:
-                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 0.5, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i+1)), arcade.color.BLACK, 22, bold=True)
+                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 0.5, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i+1)), arcade.color.WHITE, 22, bold=True)
                     else:
-                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 6, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i - 4)), arcade.color.BLACK, 22, bold=True)
+                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 6, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i - 4)), arcade.color.WHITE, 22, bold=True)
 
         elif self.state == State.score_display:
-            arcade.draw_text('total score ' + str(self.total_score), WINDOW_WIDTH / 2, WINDOW_HEIGHT/ 8 * 5, arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text('name ' + self.name, WINDOW_WIDTH / 2, WINDOW_HEIGHT/ 8 * 4, arcade.color.BLACK, 36, bold=True)
+            arcade.draw_text('total score ' + str(self.total_score), WINDOW_WIDTH / 2, WINDOW_HEIGHT/ 8 * 5, arcade.color.BLACK, 36, bold=True, align="center", anchor_x="center", anchor_y="center")
+            arcade.draw_text('name ' + self.name, WINDOW_WIDTH / 2, WINDOW_HEIGHT/ 8 * 4, arcade.color.BLACK, 36, bold=True, align="center", anchor_x="center", anchor_y="center")
 
 
 
@@ -248,6 +248,9 @@ class MyGame(arcade.Window):
                 self.score_display_timer = 0
                 functions.write_to_json(self.name, self.total_score)
                 self.total_score = 0
+                self.leaderboard_list = functions.get_leaderboard()
+                self.leaderboard_list = functions.sort_leaderbord(self.leaderboard_list)
+                self.leaderboard_list.reverse()
 
         
     def on_key_press(self, key, modifiers):
