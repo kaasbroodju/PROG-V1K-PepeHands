@@ -281,7 +281,7 @@ class MyGame(arcade.Window):
             cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.possible_answer_buttons)
             for button in cursor_collides_with:
                 if functions.checkAnswerMultipleChoice(button.character, self.correctCharacter['name']):
-                    self.score -= 
+                    self.total_score += self.score
                 else:
                     pass #TODO: make wrong button spritelist append? morris
             
