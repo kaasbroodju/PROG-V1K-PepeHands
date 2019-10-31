@@ -14,3 +14,6 @@ print('desc'.replace("name", "This character"+', '+'desc'))
 
     for 'name' in get_character('name'):
         print('name'.replace('name', "this character"))
+
+
+character_sheet['data']['results'][0]['description'] ['description'].replace(character_sheet['name'], 'this character')
