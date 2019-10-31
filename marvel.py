@@ -163,7 +163,7 @@ class MyGame(arcade.Window):
                 button.draw_text()
         elif self.state == State.easy:
             arcade.draw_text('easy', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text(self.description, int(WINDOW_WIDTH/2), int(WINDOW_HEIGHT/4 * 1.75), arcade.color.BLACK, 18, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
+            arcade.draw_text(self.description, int(WINDOW_WIDTH/2), int(WINDOW_HEIGHT/4 * 1.75), arcade.color.BLACK, 18, bold=True, align="center", anchor_x="center", anchor_y="center")
             arcade.draw_text(str(self.score), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 * 2,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 ,arcade.color.BLACK, 36, bold=True)
             for button in self.possible_answer_buttons:
@@ -188,16 +188,16 @@ class MyGame(arcade.Window):
             if len(self.leaderboard_list) >= 10:
                 for i in range(0, 10):
                     if i < 5:
-                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i][0]) + ': ' + str(self.leaderboard_list[i][1]), WINDOW_WIDTH/8 * 0.5, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i+1)), arcade.color.BLACK, 22, bold=True)
+                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 0.5, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i+1)), arcade.color.BLACK, 22, bold=True)
                     else:
-                            arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i][0]) + ': ' + str(self.leaderboard_list[i][1]), WINDOW_WIDTH/8 * 6, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i-4)), arcade.color.BLACK, 22, bold=True)
+                            arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 6, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i-4)), arcade.color.BLACK, 22, bold=True)
 
             else:
                 for i in range(0, len(self.leaderboard_list)):
                     if i < 5:
-                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i][0]) + ': ' + str(self.leaderboard_list[i][1]), WINDOW_WIDTH/8 * 0.5, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i+1)), arcade.color.BLACK, 22, bold=True)
+                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 0.5, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i+1)), arcade.color.BLACK, 22, bold=True)
                     else:
-                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i][0]) + ': ' + str(self.leaderboard_list[i][1]), WINDOW_WIDTH/8 * 6, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i - 4)), arcade.color.BLACK, 22, bold=True)
+                        arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 6, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i - 4)), arcade.color.BLACK, 22, bold=True)
 
 
 
@@ -226,8 +226,7 @@ class MyGame(arcade.Window):
             else:
                 self.questionNumber = 0
                 self.state = State.title_screen
-
-
+            self.notation_button_list = arcade.SpriteList()
 
         if self.frameskip and self.state == State.easy and self.frameskip_timer > 0.2:
             self.frameskip = False
@@ -279,15 +278,9 @@ class MyGame(arcade.Window):
             for button in cursor_collides_with:
                 self.state = button.state
                 if self.state == State.leaderboard:
-                    """
-                    TODO
-                    de data opvragen van een json file met scores en name. 
-                    En deze data in self.leaderboard_list te zetten, vervolgens deze te sorteren. 
-                    met op index 0 de hoogste score en naam in een list vorm.
-                    self.leaderboard_list[0] = ['naam van hoogst scorende persoon', (int) score van hoogste scorende persoon]
-                    
-                    """
-                    pass
+                    self.leaderboard_list = functions.get_leaderboard()
+                    self.leaderboard_list = functions.sort_leaderbord(self.leaderboard_list)
+                    self.leaderboard_list.reverse()
         elif self.state == State.title_screen:
             if arcade.check_for_collision(self.cursor, self.submit_name_button) and len(self.name) >= 3:
                 self.state = self.submit_name_button.state
