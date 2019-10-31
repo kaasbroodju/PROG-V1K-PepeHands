@@ -58,8 +58,12 @@ def get_character(with_description=False):
         nummer = nummer2[0]
         nummer2 = nummer2[1]
     json_file_comic_methode = get_json_file(json_file['data']['results'][nummer]['comics']['items'][nummer2]['resourceURI'])
-    nummer3 = random.randint(0, json_file_comic_methode['data']['results'][0]['characters']['returned'] -1) # misschien nog not 0 return filter
+    nummer3 = random.randint(0, json_file_comic_methode['data']['results'][0]['characters']['returned'] -1)
     character_sheet = get_json_file(json_file_comic_methode['data']['results'][0]['characters']['items'][nummer3]['resourceURI'])
+
+    nonFilteredCharacterName = character_sheet['data']['results'][0]['name']    #Remove the bracketed (real)names
+    filteredCharacterName = nonFilteredCharacterName.split(' (')[0]             #that some character names have
+
     if with_description:
         while True:
             if character_sheet['data']['results'][0]['description'] != '':
@@ -68,7 +72,6 @@ def get_character(with_description=False):
                 if json_file_comic_methode['data']['results'][0]['characters']['returned'] > 0:
                     for i in range(0, json_file_comic_methode['data']['results'][0]['characters']['returned']):
                         other_character_name = json_file_comic_methode['data']['results'][0]['characters']['items'][i]['name'] 
-                        #TODO filter nog toevoegen voor character name
                         if other_character_name != character_sheet['data']['results'][0]['name']:
                             list_of_characters_in_comic.append('this character appeared in the same comic as ' + other_character_name)
 
@@ -80,13 +83,12 @@ def get_character(with_description=False):
                 if series_vervolgd['data']['results'][0]['characters']['returned'] > 0:
                     for i in range(0, series_vervolgd['data']['results'][0]['characters']['returned']):
                         other_character_name = series_vervolgd['data']['results'][0]['characters']['items'][i]['name'] 
-                        #TODO filter nog toevoegen voor other character name
                         if other_character_name != character_sheet['data']['results'][0]['name']:
                             list_of_characters_in_series.append('this character appeared in the same storyline as ' + other_character_name)
                 
                 #geeft dictionary terug
-                return {'name':character_sheet['data']['results'][0]['name'], 
-                        'desc':{'desc':character_sheet['data']['results'][0]['description'].replace(character_sheet['data']['results'][0]['name'], '[DATA RETRACTED]'),
+                return {'name':filteredCharacterName, 
+                        'desc':{'desc':character_sheet['data']['results'][0]['description'].replace(filteredCharacterName, '[DATA RETRACTED]'),
                                 'comics': list_of_characters_in_comic,
                                 'series': list_of_characters_in_series}}
             else:
@@ -97,11 +99,15 @@ def get_character(with_description=False):
                     nummer = nummer2[0]
                     nummer2 = nummer2[1]
                 json_file_comic_methode = get_json_file(json_file['data']['results'][nummer]['comics']['items'][nummer2]['resourceURI'])
-                nummer3 = random.randint(0, json_file_comic_methode['data']['results'][0]['characters']['returned'] -1) # misschien nog not 0 return filter
+                nummer3 = random.randint(0, json_file_comic_methode['data']['results'][0]['characters']['returned'] -1)
+
+                nonFilteredCharacterName = character_sheet['data']['results'][0]['name']    #Remove the bracketed (real)names
+                filteredCharacterName = nonFilteredCharacterName.split(' (')[0]             #that some character names have
+
                 character_sheet = get_json_file(json_file_comic_methode['data']['results'][0]['characters']['items'][nummer3]['resourceURI'])
     else:
         #return name with empty dictionary
-        return {'name':character_sheet['data']['results'][0]['name'], 
+        return {'name':filteredCharacterName, 
                 'desc':{'desc':'',
                         'comics':[]}}
 

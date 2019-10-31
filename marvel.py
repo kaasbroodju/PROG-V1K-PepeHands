@@ -213,7 +213,8 @@ class MyGame(arcade.Window):
         if self.delta_timer >= 1:
             self.timer += 1
             self.delta_timer = 0
-            self.time_penalty = self.timer // 10
+            if self.timer != 0:
+                self.time_penalty = self.timer // 10
 
         if self.time_penalty != self.previous_time_penalty:
             if self.score <= 0:
@@ -312,11 +313,11 @@ class MyGame(arcade.Window):
                     self.total_score += self.score
                     if self.questionNumber < 7:
                         self.notation_button_list.append(AnswerButton(button.center_x, button.center_y, 'Correct.png'))
-                        self.score = 25
                         self.timer = 0
                         self.delta_timer = 0
                         self.questionNumber += 1
                         self.frameskip = True
+                        self.score = 26 #1 point is removed at start of new question, compensate with increasing score by 1 beforehand
                     else:
                         self.questionNumber = 0
                         self.state = State.score_display
