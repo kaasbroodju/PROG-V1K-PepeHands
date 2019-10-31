@@ -19,6 +19,14 @@ def newMultipleChoice(self):
     self.possible_answer_buttons = arcade.SpriteList()
     self.characterList.append(self.correctCharacter['name'])
     self.description = self.correctCharacter['desc']['desc']
+    self.charNumber = 0
+    for char in self.description:
+        if self.charNumber >= 30 and char == ' ':
+            self.tempString += '\n'
+            self.charNumber = 0
+        self.tempString += char
+        self.charNumber += 1
+    self.description = self.tempString
     for i in range(0, 9):
         self.character = api.get_character()
         """

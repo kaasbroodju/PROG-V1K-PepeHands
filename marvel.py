@@ -131,10 +131,14 @@ class MyGame(arcade.Window):
         self.hintButton = hintButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/1.5, 'Button.png')
         self.total_score = int()
         self.previous_time_penalty = int()
+        self.openAnswer = str()
+        self.tempString = str()
+        self.charNumber = int()
         self.frameskip = False
         self.notation_button_list = arcade.SpriteList()
         self.frameskip_timer = float()
         self.questionNumber = int()
+        self.previousDescription = str()
 
 
 
@@ -159,7 +163,7 @@ class MyGame(arcade.Window):
                 button.draw_text()
         elif self.state == State.easy:
             arcade.draw_text('easy', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text(self.description, int(WINDOW_WIDTH/2), int(WINDOW_HEIGHT/4 * 2.5), arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
+            arcade.draw_text(self.description, int(WINDOW_WIDTH/2), int(WINDOW_HEIGHT/4 * 1.75), arcade.color.BLACK, 18, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
             arcade.draw_text(str(self.score), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 * 2,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 ,arcade.color.BLACK, 36, bold=True)
             for button in self.possible_answer_buttons:
@@ -171,10 +175,10 @@ class MyGame(arcade.Window):
                 button.draw()
         elif self.state == State.hard:
             arcade.draw_text('hard', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=WINDOW_WIDTH/2.5)
+            arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 18, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
             arcade.draw_text(str(self.score), WINDOW_WIDTH/4,WINDOW_HEIGHT/4 * 3,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/4 * 3,WINDOW_HEIGHT/4 * 3 ,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text('hier komt de usr input te staan', WINDOW_WIDTH/8,WINDOW_HEIGHT/4 ,arcade.color.BLACK, 36, bold=True)
+            arcade.draw_text('Input: '+ self.openAnswer, WINDOW_WIDTH*2.4/8,WINDOW_HEIGHT*1.7/4 ,arcade.color.BLACK, 24, bold=True)
 
 
 
@@ -245,7 +249,13 @@ class MyGame(arcade.Window):
             elif key == arcade.key.BACKSPACE:
                 self.name = self.name[:-1]
         elif self.state == State.hard:
-            pass
+            if key != arcade.key.BACKSPACE and chr(key).lower() in 'abcdefghijklmnopqrstuvwxyz1234567890' and len(self.openAnswer) < 21: #geen back space en filter
+                if modifiers == 17 or modifiers == 1: #shift voor hoofdletter
+                    self.openAnswer += str(chr(key)).upper()
+                else:
+                    self.openAnswer += str(chr(key))
+            elif key == arcade.key.BACKSPACE:
+                self.openAnswer = self.openAnswer[:-1]
             """
             TODO:
             wanneer enter is gedrukt kijken of het goed is
@@ -302,6 +312,8 @@ class MyGame(arcade.Window):
                         self.questionNumber += 1
                         self.frameskip = True #TODO morris frameskips shite
                     else:
+                        self.questionNumber = 0
+                        self.state = State.title_screen
                         pass #TODO: write name + score to json (susan)
                 else:
                     if self.score <= 0:
@@ -310,7 +322,37 @@ class MyGame(arcade.Window):
                         self.score -= 1
                     self.notation_button_list.append(AnswerButton(button.center_x, button.center_y, 'Wrong.png'))
                     pass #TODO: make wrong button spritelist append? morris
+            if arcade.check_for_collision(self.cursor, self.hintButton):
+                self.previousDescription
+                while True: 
+                    comicOrSeries = random.randint(0, 1)                                                #
+                    if comicOrSeries == 0 and len(self.correctCharacter['desc']['comics'])-1 >= 1:                                                          #t
+                        self.description = self.correctCharacter['desc']['comics'][random.randint(0, len(self.correctCharacter['desc']['comics'])-1)]       #e
+                        if self.description == self.previousDescription:                                                                                    #s
+                            continue                                                                                                                        #t
+                        break                                                                                                                               #
+                    elif comicOrSeries == 0 and len(self.correctCharacter['desc']['series'])-1 >= 1:                                                        #p
+                        self.description = self.correctCharacter['desc']['series'][random.randint(0, len(self.correctCharacter['desc']['series'])-1)]       #l
+                        if self.description == self.previousDescription:                                                                                    #z
+                            continue
+                        break
+                self.charNumber = 0
+                for char in self.description:
+                    if self.charNumber >= 30 and char == ' ':
+                        self.tempString += '\n'
+                        self.charNumber = 0
+                    self.tempString += char
+                    self.charNumber += 1
+                self.description = self.tempString
+                self.tempString = ''
+                
+                if self.score > 0:    
+                    self.score -= 3
             
+            
+        elif self.state == State.hard:
+            pass
+
 
         elif self.state == State.leaderboard:
             if arcade.check_for_collision(self.cursor, self.back_to_main_menu_button):
