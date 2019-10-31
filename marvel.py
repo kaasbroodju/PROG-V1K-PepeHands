@@ -110,7 +110,7 @@ class MyGame(arcade.Window):
         self.possible_answer_buttons = arcade.SpriteList()
         self.timer = int()
         self.delta_timer = float()
-        self.score = int()
+        self.score = 25
         self.characterList = list()
         self.back_to_main_menu_button = StateButton(WINDOW_WIDTH/4, WINDOW_HEIGHT/4 * 3, 'Button.png', State.mode, 'back to main menu')
         self.leaderboard_list = list() #list with all the score paired with the names [[name, score], [name, score]]
@@ -122,7 +122,9 @@ class MyGame(arcade.Window):
         self.time_penalty = int()
         self.time_wrong = int()
         self.times_played = int()
-        self.hintButton = hintButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/1.5, 'button.png')
+        self.hintButton = hintButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/1.5, 'Button.png')
+        self.total_score = int()
+        self.previous_time_penalty = int()
 
 
 
@@ -191,6 +193,10 @@ class MyGame(arcade.Window):
             self.timer += 1
             self.delta_timer = 0
             self.time_penalty = self.timer // 10
+
+        if self.time_penalty != self.previous_time_penalty:
+            self.score -= 1
+            self.previous_time_penalty = self.time_penalty
 
     def on_key_press(self, key, modifiers):
         """ Called whenever the user presses a key. """
