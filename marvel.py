@@ -29,23 +29,25 @@ class Background(arcade.Sprite):
     
     def draw(self):
         arcade.draw_texture_rectangle(WINDOW_WIDTH /2 , WINDOW_HEIGHT / 2, WINDOW_WIDTH, WINDOW_HEIGHT, self.texture, 0)
-'''
-class hintButton(Textbutton):
-    def __init__ (self, game, x=0, y=0, width=100, height=40, text="`Hint`", theme=None): #Dit moet nog gechecked worden
-        super().__init__(x, y, width, height, text, theme=theme)
-        self.game = game
-        previousHintType = 'None'
 
-    def on_press(self):
-        self.pressed = True
-    
-    def on_release(self):
-        if self.pressed:
-            getHintOutput = functions.getHint(api.get_character(), previousHintType) #Dataset moet zegmaar de data uit de api zijn met {'name':iron,'desc':{description:'', comics:[], films:[]}
-            previousHintType = getHintOutput[1]                            #Dit moet uitgevoerd worden wanneer op de knop gedrukt wordt
-            hint = getHintOutput[0]                                        #Eventueel moet ook points() er nog bij maar idunno -Rick
-            currentPoints = functions.points()
-'''
+class hintButton(arcade.Sprite):
+    '''
+    #TODO: documenteer class
+    '''
+    def __init__ (self, x, y, sprite): #Dit moet nog gechecked worden
+        super().__init__()
+        self.sprite = sprite
+        self.texture = arcade.load_texture(self.sprite, scale=0.2)
+        self.center_x = x
+        self.center_y = y
+        self.text = 'New Hint'
+        
+        #getHintOutput = functions.getHint(api.get_character(), previousHintType) #Dataset moet zegmaar de data uit de api zijn met {'name':iron,'desc':{description:'', comics:[], films:[]}
+        #previousHintType = getHintOutput[1]                            #Dit moet uitgevoerd worden wanneer op de knop gedrukt wordt            hint = getHintOutput[0]                                        #Eventueel moet ook points() er nog bij maar idunno -Rick
+        #currentPoints = functions.points()
+
+    def draw_text(self):
+        arcade.draw_text(self.text, int(self.center_x), int(self.center_y), arcade.color.BLACK, align="center", anchor_x="center", anchor_y="center")
 
 
 class CharacterButton(arcade.Sprite):
@@ -61,7 +63,7 @@ class CharacterButton(arcade.Sprite):
         self.character = name
 
     def draw_text(self):
-        arcade.draw_text(self.character, self.center_x, self.center_y, arcade.color.BLACK, align="center", anchor_x="center", anchor_y="center")
+        arcade.draw_text(self.character, int(self.center_x), int(self.center_y), arcade.color.BLACK, align="center", anchor_x="center", anchor_y="center")
 
 class StateButton(arcade.Sprite):
     '''
@@ -77,7 +79,7 @@ class StateButton(arcade.Sprite):
         self.text = text
 
     def draw_text(self):
-        arcade.draw_text(self.text, self.center_x, self.center_y, arcade.color.BLACK, align="center", anchor_x="center", anchor_y="center")
+        arcade.draw_text(self.text, int(self.center_x), int(self.center_y), arcade.color.BLACK, align="center", anchor_x="center", anchor_y="center")
 
 class Cursor(arcade.Sprite):
     '''invisable cursor as long you dont draw'''
@@ -120,6 +122,7 @@ class MyGame(arcade.Window):
         self.time_penalty = int()
         self.time_wrong = int()
         self.times_played = int()
+        self.hintButton = hintButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/1.5, 'button.png')
 
 
 
@@ -144,12 +147,14 @@ class MyGame(arcade.Window):
                 button.draw_text()
         elif self.state == State.easy:
             arcade.draw_text('easy', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text(self.description, WINDOW_WIDTH/2, WINDOW_HEIGHT/4 * 2.5, arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=WINDOW_WIDTH/2.5)
+            arcade.draw_text(self.description, int(WINDOW_WIDTH/2), int(WINDOW_HEIGHT/4 * 2.5), arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
             arcade.draw_text(str(self.score), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 * 2,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 ,arcade.color.BLACK, 36, bold=True)
             for button in self.possible_answer_buttons:
                 button.draw()
                 button.draw_text()
+            self.hintButton.draw()
+            self.hintButton.draw_text()
         elif self.state == State.hard:
             arcade.draw_text('hard', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=WINDOW_WIDTH/2.5)
@@ -266,6 +271,12 @@ class MyGame(arcade.Window):
                             self.possible_answer_buttons.append(CharacterButton(WINDOW_WIDTH/8, WINDOW_HEIGHT/6 * (self.characterList.index(index) + 1), 'Button.png', index))
                         else:
                             self.possible_answer_buttons.append(CharacterButton(WINDOW_WIDTH/8*7, WINDOW_HEIGHT/6 * (self.characterList.index(index) - 4), 'Button.png', index))
+        elif self.state == State.easy:
+            cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.difficulty_buttons)
+            for button in cursor_collides_with:
+                pass
+            
+
         elif self.state == State.leaderboard:
             if arcade.check_for_collision(self.cursor, self.back_to_main_menu_button):
                 self.state = self.back_to_main_menu_button.state
