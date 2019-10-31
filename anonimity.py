@@ -1,7 +1,7 @@
 ### hier wat verschillende opties die getest moeten worden (en moeten worden aangepast naar de correcte objecten ###
 
 charact_dict = get_character()
-charact_dict['desc']['desc'].replace(charact_dict['name'], 'this character')
+charact_dict['desc']['desc'].replace(charact_dict['name'], '[DATA REDACTED]')
 
 
 charact_dict = get_character()

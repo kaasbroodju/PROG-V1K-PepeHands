@@ -122,6 +122,7 @@ class MyGame(arcade.Window):
         self.hintButton = hintButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/1.5, 'Button.png')
         self.total_score = int()
         self.previous_time_penalty = int()
+        self.openAnswer = str()
 
 
 
@@ -156,10 +157,10 @@ class MyGame(arcade.Window):
             self.hintButton.draw_text()
         elif self.state == State.hard:
             arcade.draw_text('hard', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=WINDOW_WIDTH/2.5)
+            arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
             arcade.draw_text(str(self.score), WINDOW_WIDTH/4,WINDOW_HEIGHT/4 * 3,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/4 * 3,WINDOW_HEIGHT/4 * 3 ,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text('hier komt de usr input te staan', WINDOW_WIDTH/8,WINDOW_HEIGHT/4 ,arcade.color.BLACK, 36, bold=True)
+            arcade.draw_text('Input: '+ self.openAnswer, WINDOW_WIDTH*2.4/8,WINDOW_HEIGHT*1.7/4 ,arcade.color.BLACK, 24, bold=True)
 
 
 
@@ -207,7 +208,13 @@ class MyGame(arcade.Window):
             elif key == arcade.key.BACKSPACE:
                 self.name = self.name[:-1]
         elif self.state == State.hard:
-            pass
+            if key != arcade.key.BACKSPACE and chr(key).lower() in 'abcdefghijklmnopqrstuvwxyz1234567890' and len(self.openAnswer) < 21: #geen back space en filter
+                if modifiers == 17 or modifiers == 1: #shift voor hoofdletter
+                    self.openAnswer += str(chr(key)).upper()
+                else:
+                    self.openAnswer += str(chr(key))
+            elif key == arcade.key.BACKSPACE:
+                self.openAnswer = self.openAnswer[:-1]
             """
             TODO:
             wanneer enter is gedrukt kijken of het goed is
@@ -269,6 +276,9 @@ class MyGame(arcade.Window):
                     self.score -= 1
                     pass #TODO: make wrong button spritelist append? morris
             
+        elif self.state == State.hard:
+            pass
+
 
         elif self.state == State.leaderboard:
             if arcade.check_for_collision(self.cursor, self.back_to_main_menu_button):
