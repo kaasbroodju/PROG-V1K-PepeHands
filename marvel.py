@@ -11,6 +11,7 @@ WINDOW_HEIGHT = int(WINDOW_WIDTH / 4 * 3)
 WINDOW_TITLE = "Marvel"
 WINDOW_BACKGROUND_COLOR = arcade.color.BLACK
 
+
 class State(Enum):
     title_screen = 0
     mode = 1
@@ -18,6 +19,7 @@ class State(Enum):
     leaderboard = 3
     easy = 4
     hard = 5
+
 
 class Background(arcade.Sprite):
     def __init__(self, x, y, sprite):
@@ -30,21 +32,18 @@ class Background(arcade.Sprite):
     def draw(self):
         arcade.draw_texture_rectangle(WINDOW_WIDTH /2 , WINDOW_HEIGHT / 2, WINDOW_WIDTH, WINDOW_HEIGHT, self.texture, 0)
 
+
 class hintButton(arcade.Sprite):
     '''
-    #TODO: documenteer class
+    A button used to get a new hint - simple sprite based button
     '''
-    def __init__ (self, x, y, sprite): #Dit moet nog gechecked worden
+    def __init__ (self, x, y, sprite):
         super().__init__()
         self.sprite = sprite
         self.texture = arcade.load_texture(self.sprite, scale=0.2)
         self.center_x = x
         self.center_y = y
         self.text = 'New Hint'
-        
-        #getHintOutput = functions.getHint(api.get_character(), previousHintType) #Dataset moet zegmaar de data uit de api zijn met {'name':iron,'desc':{description:'', comics:[], films:[]}
-        #previousHintType = getHintOutput[1]                            #Dit moet uitgevoerd worden wanneer op de knop gedrukt wordt            hint = getHintOutput[0]                                        #Eventueel moet ook points() er nog bij maar idunno -Rick
-        #currentPoints = functions.points()
 
     def draw_text(self):
         arcade.draw_text(self.text, int(self.center_x), int(self.center_y), arcade.color.BLACK, align="center", anchor_x="center", anchor_y="center")
@@ -52,7 +51,7 @@ class hintButton(arcade.Sprite):
 
 class CharacterButton(arcade.Sprite):
     '''
-    #TODO: documenteer class
+    A button used to give an answer in easy/multiple choice mode - simple sprite based button
     '''
     def __init__(self, x, y, sprite, name):
         super().__init__()
@@ -64,6 +63,7 @@ class CharacterButton(arcade.Sprite):
 
     def draw_text(self):
         arcade.draw_text(self.character, int(self.center_x), int(self.center_y), arcade.color.BLACK, align="center", anchor_x="center", anchor_y="center")
+
 
 class StateButton(arcade.Sprite):
     '''
@@ -303,7 +303,7 @@ class MyGame(arcade.Window):
                         self.timer = 0
                         self.delta_timer = 0
                         self.questionNumber += 1
-                        self.frameskip = True #TODO morris frameskips shite
+                        self.frameskip = True
                     else:
                         self.questionNumber = 0
                         self.state = State.title_screen
