@@ -245,37 +245,13 @@ class MyGame(arcade.Window):
                 self.state = button.state
                 self.timer = 0
                 if button.state == State.easy:
-                    self.correctCharacter = api.get_character(True)
-                    print(self.correctCharacter)
-                    self.characterList.append(self.correctCharacter['name'])
-                    self.description = self.correctCharacter['desc']['desc']
-                    for i in range(0, 9):
-                        self.character = api.get_character()
-                        """
-                        TODO
-                        naam filteren/anomiseren in descriptions
-                        
-                        """
-                        safety = 0
-                        while self.character['name'] in self.characterList:
-                            self.character = api.get_character()
-                            safety += 1
-                            if safety == 10: #Make sure we dont infinitely keep requesting from API (daily limit)
-                                break
-                        self.characterList.append(self.character['name'])
-                    print(self.characterList)
-                    random.shuffle(self.characterList)
-                    print(self.characterList)
-                    for index in self.characterList:
-                        if self.characterList.index(index) < 5:
-                            self.possible_answer_buttons.append(CharacterButton(WINDOW_WIDTH/8, WINDOW_HEIGHT/6 * (self.characterList.index(index) + 1), 'Button.png', index))
-                        else:
-                            self.possible_answer_buttons.append(CharacterButton(WINDOW_WIDTH/8*7, WINDOW_HEIGHT/6 * (self.characterList.index(index) - 4), 'Button.png', index))
+                    functions.newMultipleChoice(self)
         elif self.state == State.easy:
             cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.possible_answer_buttons)
             for button in cursor_collides_with:
                 if functions.checkAnswerMultipleChoice(button.character, self.correctCharacter['name']):
                     self.total_score += self.score
+                    functions.newMultipleChoice(self)
                 else:
                     pass #TODO: make wrong button spritelist append? morris
             
