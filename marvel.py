@@ -113,10 +113,7 @@ class MyGame(arcade.Window):
         self.score = 25
         self.characterList = list()
         self.back_to_main_menu_button = StateButton(WINDOW_WIDTH/4, WINDOW_HEIGHT/4 * 3, 'Button.png', State.mode, 'back to main menu')
-        self.leaderboard_list = list() #list with all the score paired with the names [[name, score], [name, score]]
-        #TODO aparte lijst voor gamemode leaderbord?
-        for i in range(0, 15):
-            self.leaderboard_list.append(['Morris', random.randint(0,125)])
+        self.leaderboard_list = list() #TODO: list with all the score paired with the names [[name, score], [name, score]] (SUSAN)
         self.description = 'hier komt de hint te staan'
         self.hint_penalty = int()
         self.time_penalty = int()
@@ -256,9 +253,20 @@ class MyGame(arcade.Window):
             cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.possible_answer_buttons)
             for button in cursor_collides_with:
                 if functions.checkAnswerMultipleChoice(button.character, self.correctCharacter['name']):
+                    if self.score < 0:
+                        self.score = 0
                     self.total_score += self.score
-                    functions.newMultipleChoice(self)
+                    if self.questionNumber < 7:
+                        functions.newMultipleChoice(self)
+                        self.score = 25
+                        self.timer = 0
+                        self.delta_timer = 0
+                        self.questionNumber += 1
+                        self.frameskip = True #TODO morris frameskips shite
+                    else:
+                        pass #TODO: write name + score to json (susan)
                 else:
+                    self.score -= 1
                     pass #TODO: make wrong button spritelist append? morris
             
 
