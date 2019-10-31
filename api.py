@@ -82,7 +82,7 @@ def get_character(with_description=False):
                         other_character_name = series_vervolgd['data']['results'][0]['characters']['items'][i]['name'] 
                         #TODO filter nog toevoegen voor other character name
                         if other_character_name != character_sheet['data']['results'][0]['name']:
-                            list_of_characters_in_series.append('this character appeared in the same comic as ' + other_character_name)
+                            list_of_characters_in_series.append('this character appeared in the same storyline as ' + other_character_name)
                 
                 #geeft dictionary terug
                 return {'name':character_sheet['data']['results'][0]['name'], 

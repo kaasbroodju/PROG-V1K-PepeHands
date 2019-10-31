@@ -19,6 +19,7 @@ class State(Enum):
     leaderboard = 3
     easy = 4
     hard = 5
+    score_display = 6
 
 
 class Background(arcade.Sprite):
@@ -139,6 +140,7 @@ class MyGame(arcade.Window):
         self.frameskip_timer = float()
         self.questionNumber = int()
         self.previousDescription = str()
+        self.score_display_timer = int()
 
 
 
@@ -199,6 +201,9 @@ class MyGame(arcade.Window):
                     else:
                         arcade.draw_text(str(i+1) + '. ' + str(self.leaderboard_list[i]['name']) + ': ' + str(self.leaderboard_list[i]['score']), WINDOW_WIDTH/8 * 6, WINDOW_HEIGHT - (WINDOW_HEIGHT/6 * (i - 4)), arcade.color.BLACK, 22, bold=True)
 
+        elif self.state == State.score_display:
+            arcade.draw_text('total score ' + str(self.total_score), WINDOW_WIDTH / 2, WINDOW_HEIGHT/ 8 * 5, arcade.color.BLACK, 36, bold=True)
+            arcade.draw_text('name ' + self.name, WINDOW_WIDTH / 2, WINDOW_HEIGHT/ 8 * 4, arcade.color.BLACK, 36, bold=True)
 
 
 
@@ -224,7 +229,7 @@ class MyGame(arcade.Window):
                 functions.newMultipleChoice(self)
             else:
                 self.questionNumber = 0
-                self.state = State.title_screen
+                self.state = State.score_display
             self.notation_button_list = arcade.SpriteList()
 
         if self.frameskip and self.state == State.easy and self.frameskip_timer > 0.2:
@@ -234,6 +239,14 @@ class MyGame(arcade.Window):
             self.notation_button_list = arcade.SpriteList()
         elif self.frameskip:
             self.frameskip_timer += delta_time
+
+        if self.state == State.score_display:
+            self.score_display_timer += delta_time
+            if self.score_display_timer > 7:
+                self.state = State.leaderboard
+                self.score_display_timer = 0
+                functions.write_to_json(self.name, self.total_score)
+                self.total_score = 0
 
         
     def on_key_press(self, key, modifiers):
@@ -306,7 +319,7 @@ class MyGame(arcade.Window):
                         self.frameskip = True
                     else:
                         self.questionNumber = 0
-                        self.state = State.title_screen
+                        self.state = State.score_display
                         pass #TODO: write name + score to json (susan)
                 else:
                     if self.score <= 0:
