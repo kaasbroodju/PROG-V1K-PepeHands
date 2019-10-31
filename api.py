@@ -100,11 +100,10 @@ def get_character(with_description=False):
                     nummer2 = nummer2[1]
                 json_file_comic_methode = get_json_file(json_file['data']['results'][nummer]['comics']['items'][nummer2]['resourceURI'])
                 nummer3 = random.randint(0, json_file_comic_methode['data']['results'][0]['characters']['returned'] -1)
-
+                character_sheet = get_json_file(json_file_comic_methode['data']['results'][0]['characters']['items'][nummer3]['resourceURI'])
+                
                 nonFilteredCharacterName = character_sheet['data']['results'][0]['name']    #Remove the bracketed (real)names
                 filteredCharacterName = nonFilteredCharacterName.split(' (')[0]             #that some character names have
-
-                character_sheet = get_json_file(json_file_comic_methode['data']['results'][0]['characters']['items'][nummer3]['resourceURI'])
     else:
         #return name with empty dictionary
         return {'name':filteredCharacterName, 
