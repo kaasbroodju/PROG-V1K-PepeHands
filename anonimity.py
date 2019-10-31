@@ -16,4 +16,4 @@ print('desc'.replace("name", "This character"+', '+'desc'))
         print('name'.replace('name', "this character"))
 
 
-character_sheet['data']['results'][0]['description'] ['description'].replace(character_sheet['name'], 'this character')
+character_sheet['data']['results'][0]['description'].replace(character_sheet['data']['results'][0]['name'], 'DATA RETRACTED')
