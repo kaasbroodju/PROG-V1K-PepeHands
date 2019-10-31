@@ -27,6 +27,7 @@ def newMultipleChoice(self):
         self.tempString += char
         self.charNumber += 1
     self.description = self.tempString
+    self.tempString = ''
     for i in range(0, 9):
         self.character = api.get_character()
         """

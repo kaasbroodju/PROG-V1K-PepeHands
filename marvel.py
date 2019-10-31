@@ -310,7 +310,7 @@ class MyGame(arcade.Window):
                         self.timer = 0
                         self.delta_timer = 0
                         self.questionNumber += 1
-                        self.frameskip = True #TODO morris frameskips shite
+                        self.frameskip = True
                     else:
                         self.questionNumber = 0
                         self.state = State.title_screen
