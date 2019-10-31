@@ -272,9 +272,12 @@ class MyGame(arcade.Window):
                         else:
                             self.possible_answer_buttons.append(CharacterButton(WINDOW_WIDTH/8*7, WINDOW_HEIGHT/6 * (self.characterList.index(index) - 4), 'Button.png', index))
         elif self.state == State.easy:
-            cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.difficulty_buttons)
+            cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.possible_answer_buttons)
             for button in cursor_collides_with:
-                pass
+                if functions.checkAnswerMultipleChoice(button.character, self.correctCharacter['name']):
+                    self.score -= 
+                else:
+                    pass #TODO: make wrong button spritelist append? morris
             
 
         elif self.state == State.leaderboard:
