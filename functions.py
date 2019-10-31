@@ -27,8 +27,8 @@ def checkAnswerMultipleChoice(answer, correctAnswer):
     return rightAnswer
 
 
-def apiConversion():
-    '''Converts API data to usable data'''
+def apiFilter():
+    '''Filters API data'''
     return
 
 
