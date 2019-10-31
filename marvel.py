@@ -90,6 +90,15 @@ class Cursor(arcade.Sprite):
         self.center_x = x
         self.center_y = y
 
+
+class AnswerButton(arcade.Sprite):
+    def __init__(self, x, y, sprite):
+        super().__init__()
+        self.sprite = sprite
+        self.texture = arcade.load_texture(self.sprite, scale=0.1)
+        self.center_x = x
+        self.center_y = y
+
 class MyGame(arcade.Window):
     """ An Arcade game. """
     def __init__(self, width, height, title):
@@ -122,6 +131,10 @@ class MyGame(arcade.Window):
         self.hintButton = hintButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/1.5, 'Button.png')
         self.total_score = int()
         self.previous_time_penalty = int()
+        self.frameskip = False
+        self.notation_button_list = arcade.SpriteList()
+        self.frameskip_timer = float()
+        self.questionNumber = int()
 
 
 
@@ -154,6 +167,8 @@ class MyGame(arcade.Window):
                 button.draw_text()
             self.hintButton.draw()
             self.hintButton.draw_text()
+            for button in self.notation_button_list:
+                button.draw()
         elif self.state == State.hard:
             arcade.draw_text('hard', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=WINDOW_WIDTH/2.5)
@@ -192,9 +207,21 @@ class MyGame(arcade.Window):
             self.time_penalty = self.timer // 10
 
         if self.time_penalty != self.previous_time_penalty:
-            self.score -= 1
+            if self.score <= 0:
+                self.score = 0
+            else:
+                self.score -= 1
             self.previous_time_penalty = self.time_penalty
 
+        if self.frameskip and self.state == State.easy and self.frameskip_timer > 0.2:
+            self.frameskip = False
+            self.frameskip_timer = float()
+            functions.newMultipleChoice(self)
+            self.notation_button_list = arcade.SpriteList()
+        elif self.frameskip:
+            self.frameskip_timer += delta_time
+
+        
     def on_key_press(self, key, modifiers):
         """ Called whenever the user presses a key. """
         if self.state == State.title_screen:
@@ -257,7 +284,7 @@ class MyGame(arcade.Window):
                         self.score = 0
                     self.total_score += self.score
                     if self.questionNumber < 7:
-                        functions.newMultipleChoice(self)
+                        self.notation_button_list.append(AnswerButton(button.center_x, button.center_y, 'Correct.png'))
                         self.score = 25
                         self.timer = 0
                         self.delta_timer = 0
@@ -266,7 +293,11 @@ class MyGame(arcade.Window):
                     else:
                         pass #TODO: write name + score to json (susan)
                 else:
-                    self.score -= 1
+                    if self.score =< 0:
+                        self.score = 0
+                    else:
+                        self.score -= 1
+                    self.notation_button_list.append(AnswerButton(button.center_x, button.center_y, 'Wrong.png'))
                     pass #TODO: make wrong button spritelist append? morris
             
 
