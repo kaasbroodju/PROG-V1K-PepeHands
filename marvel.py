@@ -134,11 +134,11 @@ class MyGame(arcade.Window):
         self.openAnswer = str()
         self.tempString = str()
         self.charNumber = int()
-        self.tempHint = str()
         self.frameskip = False
         self.notation_button_list = arcade.SpriteList()
         self.frameskip_timer = float()
         self.questionNumber = int()
+        self.previousDescription = str()
 
 
 
@@ -311,28 +311,28 @@ class MyGame(arcade.Window):
                     self.notation_button_list.append(AnswerButton(button.center_x, button.center_y, 'Wrong.png'))
                     pass #TODO: make wrong button spritelist append? morris
             if arcade.check_for_collision(self.cursor, self.hintButton):
-                comicOrSeries = random.randint(0, 1)
-                if comicOrSeries == 0:
-                    self.tempHint = self.correctCharacter['desc']['comics'][random.randint(0, len(self.correctCharacter['desc']['comics'])-1)]
-                    self.charNumber = 0
-                    for char in self.tempHint:
-                        if self.charNumber >= 30 and char == ' ':
-                            self.tempString += '\n'
-                            self.charNumber = 0
-                        self.tempString += char
-                        self.charNumber += 1
-                    self.tempHint = self.tempString
-                else:
-                    self.tempHint = self.correctCharacter['desc']['series'][random.randint(0, len(self.correctCharacter['desc']['series'])-1)]
-                    self.charNumber = 0
-                    for char in self.tempHint:
-                        if self.charNumber >= 30 and char == ' ':
-                            self.tempString += '\n'
-                            self.charNumber = 0
-                        self.tempString += char
-                        self.charNumber += 1
-                    self.tempHint = self.tempString
-
+                self.previousDescription
+                while True:
+                    comicOrSeries = random.randint(0, 1)
+                    if comicOrSeries == 0 and len(self.correctCharacter['desc']['comics'])-1 >= 1:                                                          #t
+                        self.description = self.correctCharacter['desc']['comics'][random.randint(0, len(self.correctCharacter['desc']['comics'])-1)]       #e
+                        if self.description == self.previousDescription:                                                                                    #s
+                            continue                                                                                                                        #t
+                        break                                                                                                                               #
+                    elif comicOrSeries == 0 and len(self.correctCharacter['desc']['series'])-1 >= 1:                                                        #p
+                        self.description = self.correctCharacter['desc']['series'][random.randint(0, len(self.correctCharacter['desc']['series'])-1)]       #l
+                        if self.description == self.previousDescription:                                                                                    #z
+                            continue
+                        break
+                self.charNumber = 0
+                for char in self.description:
+                    if self.charNumber >= 30 and char == ' ':
+                        self.tempString += '\n'
+                        self.charNumber = 0
+                    self.tempString += char
+                    self.charNumber += 1
+                self.description = self.tempString
+                self.tempString = ''
                 
                     
                 self.score -= 3
