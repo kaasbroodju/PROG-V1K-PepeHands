@@ -4,6 +4,21 @@
             {
                 "name": "( ͡° ͜ʖ ͡°)",
                 "score": 175
+<<<<<<< HEAD
+=======
+            },
+            {
+                "name": "jasper",
+                "score": 175
+            },
+            {
+                "name": "susan",
+                "score": 50
+            },
+            {
+                "name": "Rick",
+                "score": 189
+>>>>>>> 57839895b51c9aa55d5e2b51b4a5ae1a2583f11f
             }
         ]
     }

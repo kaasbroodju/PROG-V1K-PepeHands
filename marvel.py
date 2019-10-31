@@ -159,12 +159,12 @@ class MyGame(arcade.Window):
                 button.draw()
                 button.draw_text()
         elif self.state == State.choose_difficulty:
-            arcade.draw_text('difficuly', WINDOW_WIDTH/2, WINDOW_HEIGHT/4 *3, arcade.color.BLACK)
+            arcade.draw_text('difficuly', WINDOW_WIDTH/2, WINDOW_HEIGHT/4 *3.07, arcade.color.BLACK, 36, bold=True, align="center", anchor_x="center", anchor_y="center")
             for button in self.difficulty_buttons:
                 button.draw()
                 button.draw_text()
         elif self.state == State.easy:
-            arcade.draw_text('easy', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
+            arcade.draw_text('easy', WINDOW_WIDTH/2,WINDOW_HEIGHT/4 *3.07, arcade.color.BLACK, 36, bold=True, align="center", anchor_x="center", anchor_y="center")
             arcade.draw_text(self.description, int(WINDOW_WIDTH/2), int(WINDOW_HEIGHT/4 * 1.75), arcade.color.BLACK, 18, bold=True, align="center", anchor_x="center", anchor_y="center")
             arcade.draw_text(str(self.score), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 * 2,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 ,arcade.color.BLACK, 36, bold=True)
@@ -176,7 +176,7 @@ class MyGame(arcade.Window):
             for button in self.notation_button_list:
                 button.draw()
         elif self.state == State.hard:
-            arcade.draw_text('hard', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
+            arcade.draw_text('hard', WINDOW_WIDTH/2,WINDOW_HEIGHT/4 *3.07, arcade.color.BLACK, 36, bold=True, align="center", anchor_x="center", anchor_y="center")
             arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 18, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
             arcade.draw_text(str(self.score), WINDOW_WIDTH/4,WINDOW_HEIGHT/4 * 3,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/4 * 3,WINDOW_HEIGHT/4 * 3 ,arcade.color.BLACK, 36, bold=True)
@@ -314,7 +314,7 @@ class MyGame(arcade.Window):
                     if self.score < 0:
                         self.score = 0
                     self.total_score += self.score
-                    if self.questionNumber < 7:
+                    if self.questionNumber < 6:
                         self.notation_button_list.append(AnswerButton(button.center_x, button.center_y, 'Correct.png'))
                         self.timer = 0
                         self.delta_timer = 0
