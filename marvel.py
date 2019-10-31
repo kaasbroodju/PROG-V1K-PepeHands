@@ -293,7 +293,7 @@ class MyGame(arcade.Window):
                     else:
                         pass #TODO: write name + score to json (susan)
                 else:
-                    if self.score =< 0:
+                    if self.score <= 0:
                         self.score = 0
                     else:
                         self.score -= 1

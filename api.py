@@ -86,7 +86,7 @@ def get_character(with_description=False):
                 
                 #geeft dictionary terug
                 return {'name':character_sheet['data']['results'][0]['name'], 
-                        'desc':{'desc':character_sheet['data']['results'][0]['description'].replace(character_sheet['data']['results'][0]['name'], 'DATA RETRACTED'),
+                        'desc':{'desc':character_sheet['data']['results'][0]['description'].replace(character_sheet['data']['results'][0]['name'], '[DATA RETRACTED]'),
                                 'comics': list_of_characters_in_comic,
                                 'series': list_of_characters_in_series}}
             else:
