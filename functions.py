@@ -96,3 +96,49 @@ def points(answer, correctAnswer, easy, hint):
                 points = points - 1
     return points
 """
+
+def give_nickname():
+    """Asks the user for a username and returns this as string."""
+    nickname = input('Nickname: ')
+    file = 'scoreboard.json'
+    try:
+        with open(file, 'r') as json_file:
+            data = json.load(json_file)
+            data = data['scores']
+        for item in data.keys():
+            if nickname == item:
+                print('Nickname taken. Try something else')
+                give_nickname()
+        return nickname
+    except:
+        return nickname
+
+def write_to_scoreboard(points):
+    """Takes the amount of points earned by player as input. Asks the user to choose a nickname and writes the chosen
+    nickname and earned score to a jsonfile."""
+    file = 'scoreboard.json'
+    nickname = give_nickname()
+    dict_scores = {}
+    output = {'scores': dict_scores}
+    dict_scores[nickname] = points
+    try:            #kopieert de json file (naar de lijst waar de eerder geregristreerde inloggegevens ook in staan.
+        with open(file, 'r') as json_file:
+            data = json.load(json_file)
+            data = data['scores']
+            for item in data:
+                dict_scores[item] = data[item]
+    except:         #doet niks als er geen inhoud in de json file is.
+        pass
+    with open(file, 'w') as json_file:
+        json_content = json.dump(output, json_file, indent=4)
+
+def leaderboard():
+    """Reads file 'Scoreboard.json', returns a sorted list of the scores with nicknames. Begins with the highest
+    element."""
+    file = 'scoreboard.json'
+    leaderboard_list = []
+    with open(file, 'r') as json_file:
+        data = json.load(json_file)
+        data = data['scores']
+        leaderboard_list = sorted(data.items(), key=lambda x: x[1], reverse=True)
+    return leaderboard_list
