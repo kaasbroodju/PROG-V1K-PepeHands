@@ -123,6 +123,9 @@ class MyGame(arcade.Window):
         self.total_score = int()
         self.previous_time_penalty = int()
         self.openAnswer = str()
+        self.tempString = str()
+        self.charNumber = int()
+        self.tempHint = str()
 
 
 
@@ -147,7 +150,7 @@ class MyGame(arcade.Window):
                 button.draw_text()
         elif self.state == State.easy:
             arcade.draw_text('easy', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text(self.description, int(WINDOW_WIDTH/2), int(WINDOW_HEIGHT/4 * 2.5), arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
+            arcade.draw_text(self.description, int(WINDOW_WIDTH/2), int(WINDOW_HEIGHT/4 * 1.75), arcade.color.BLACK, 18, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
             arcade.draw_text(str(self.score), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 * 2,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/2 ,WINDOW_HEIGHT/8 ,arcade.color.BLACK, 36, bold=True)
             for button in self.possible_answer_buttons:
@@ -157,7 +160,7 @@ class MyGame(arcade.Window):
             self.hintButton.draw_text()
         elif self.state == State.hard:
             arcade.draw_text('hard', WINDOW_WIDTH/2,WINDOW_HEIGHT/8 * 7,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 12, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
+            arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 18, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
             arcade.draw_text(str(self.score), WINDOW_WIDTH/4,WINDOW_HEIGHT/4 * 3,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/4 * 3,WINDOW_HEIGHT/4 * 3 ,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text('Input: '+ self.openAnswer, WINDOW_WIDTH*2.4/8,WINDOW_HEIGHT*1.7/4 ,arcade.color.BLACK, 24, bold=True)
@@ -271,10 +274,38 @@ class MyGame(arcade.Window):
                         self.questionNumber += 1
                         self.frameskip = True #TODO morris frameskips shite
                     else:
+                        self.questionNumber = 0
                         pass #TODO: write name + score to json (susan)
                 else:
                     self.score -= 1
                     pass #TODO: make wrong button spritelist append? morris
+            if arcade.check_for_collision(self.cursor, self.hintButton):
+                comicOrSeries = random.randint(0, 1)
+                if comicOrSeries == 0:
+                    self.tempHint = self.correctCharacter['desc']['comics'][random.randint(0, len(self.correctCharacter['desc']['comics'])-1)]
+                    self.charNumber = 0
+                    for char in self.tempHint:
+                        if self.charNumber >= 30 and char == ' ':
+                            self.tempString += '\n'
+                            self.charNumber = 0
+                        self.tempString += char
+                        self.charNumber += 1
+                    self.tempHint = self.tempString
+                else:
+                    self.tempHint = self.correctCharacter['desc']['series'][random.randint(0, len(self.correctCharacter['desc']['series'])-1)]
+                    self.charNumber = 0
+                    for char in self.tempHint:
+                        if self.charNumber >= 30 and char == ' ':
+                            self.tempString += '\n'
+                            self.charNumber = 0
+                        self.tempString += char
+                        self.charNumber += 1
+                    self.tempHint = self.tempString
+
+                
+                    
+                self.score -= 3
+            
             
         elif self.state == State.hard:
             pass
