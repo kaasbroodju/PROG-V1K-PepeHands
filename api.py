@@ -63,13 +63,32 @@ def get_character(with_description=False):
     if with_description:
         while True:
             if character_sheet['data']['results'][0]['description'] != '':
-                #return waar hij/zij inzat en description
-                series_appeared = list()
-                for series in character_sheet['data']['results'][0]['series']['items']:
-                    series_appeared.append(series['name'])
+                # zoekt andere character waarbij character in dezelfde comic zat
+                list_of_characters_in_comic = list()
+                if json_file_comic_methode['data']['results'][0]['characters']['returned'] > 0:
+                    for i in range(0, json_file_comic_methode['data']['results'][0]['characters']['returned']):
+                        other_character_name = json_file_comic_methode['data']['results'][0]['characters']['items'][i]['name'] 
+                        #TODO filter nog toevoegen voor character name
+                        if other_character_name != character_sheet['data']['results'][0]['name']:
+                            list_of_characters_in_comic.append('this character appeared in the same comic as ' + other_character_name)
+
+                nummer5 = random.randint(0, character_sheet['data']['results'][0]['series']['returned'] -1) #kies 1 willekeurige serie anders krijg je heel veel materiaal
+                
+                # zoekt andere character waarbij character in dezelfde serie zat
+                series_vervolgd = get_json_file(character_sheet['data']['results'][0]['series']['items'][nummer5]['resourceURI'])
+                list_of_characters_in_series = list()
+                if series_vervolgd['data']['results'][0]['characters']['returned'] > 0:
+                    for i in range(0, series_vervolgd['data']['results'][0]['characters']['returned']):
+                        other_character_name = series_vervolgd['data']['results'][0]['characters']['items'][i]['name'] 
+                        #TODO filter nog toevoegen voor other character name
+                        if other_character_name != character_sheet['data']['results'][0]['name']:
+                            list_of_characters_in_series.append('this character appeared in the same comic as ' + other_character_name)
+                
+                #geeft dictionary terug
                 return {'name':character_sheet['data']['results'][0]['name'], 
                         'desc':{'desc':character_sheet['data']['results'][0]['description'],
-                                'comics':series_appeared}}
+                                'comics': list_of_characters_in_comic,
+                                'series': list_of_characters_in_series}}
             else:
                 #zoek nieuw character
                 nummer = random.randint(0, json_file['data']['count'] - 1)
@@ -86,7 +105,4 @@ def get_character(with_description=False):
                 'desc':{'desc':'',
                         'comics':[]}}
 
-"""
-TODO:
-aantal desc voor populairiteit aangeven
-"""
+#random.choice([keys()])
