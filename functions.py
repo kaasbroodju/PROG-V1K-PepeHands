@@ -2,6 +2,7 @@ import random
 import api
 import marvel
 import arcade
+import json
 
 #{'name':iron,'desc':{description:'', comics:[]}
 #API dataset template^
@@ -11,6 +12,33 @@ import arcade
 #    '''Should be called with argument True for easy, '''
 
 #    return
+
+def write_to_json(name, score): #maybe add mode
+    with open('leaderboard.json') as file:
+        data = json.load(file)
+    data['data']['players'].append({'name': name, 'score': score})
+    file = open('leaderboard.json', 'w')
+    json.dump(data, file, indent=4)
+
+def sort_leaderbord(leaderboard):
+    #bubble sort
+    x = len(leaderboard)
+    for y in range(x):
+        for z in range(0, x-y-1):
+            # swap elementen
+            if leaderboard[z]['score'] > leaderboard[z+1]['score'] :
+                leaderboard[z], leaderboard[z+1] = leaderboard[z+1], leaderboard[z]
+    return leaderboard
+    
+def get_leaderboard():
+    with open('leaderboard.json') as file:
+        data = json.load(file)
+    return data['data']['players']
+
+
+
+
+
 
 def newMultipleChoice(self):
     self.correctCharacter = api.get_character(True)
