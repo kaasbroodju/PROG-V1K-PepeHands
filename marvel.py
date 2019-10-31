@@ -122,8 +122,8 @@ class MyGame(arcade.Window):
         self.time_penalty = int()
         self.time_wrong = int()
         self.times_played = int()
-        self.hintButton = hintButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/1.5, 'button.png')
-        self.total.score = int()
+        self.hintButton = hintButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/1.5, 'Button.png')
+        self.total_score = int()
         self.previous_time_penalty = int()
 
 
@@ -193,7 +193,7 @@ class MyGame(arcade.Window):
             self.timer += 1
             self.delta_timer = 0
             self.time_penalty = self.timer // 10
-            
+
         if self.time_penalty != self.previous_time_penalty:
             self.score -= 1
             self.previous_time_penalty = self.time_penalty
