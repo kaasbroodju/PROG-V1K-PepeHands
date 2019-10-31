@@ -302,6 +302,7 @@ class MyGame(arcade.Window):
                         self.frameskip = True #TODO morris frameskips shite
                     else:
                         self.questionNumber = 0
+                        self.state = State.title_screen
                         pass #TODO: write name + score to json (susan)
                 else:
                     if self.score <= 0:
@@ -312,8 +313,8 @@ class MyGame(arcade.Window):
                     pass #TODO: make wrong button spritelist append? morris
             if arcade.check_for_collision(self.cursor, self.hintButton):
                 self.previousDescription
-                while True:
-                    comicOrSeries = random.randint(0, 1)
+                while True: 
+                    comicOrSeries = random.randint(0, 1)                                                #
                     if comicOrSeries == 0 and len(self.correctCharacter['desc']['comics'])-1 >= 1:                                                          #t
                         self.description = self.correctCharacter['desc']['comics'][random.randint(0, len(self.correctCharacter['desc']['comics'])-1)]       #e
                         if self.description == self.previousDescription:                                                                                    #s
@@ -334,8 +335,8 @@ class MyGame(arcade.Window):
                 self.description = self.tempString
                 self.tempString = ''
                 
-                    
-                self.score -= 3
+                if self.score > 0:    
+                    self.score -= 3
             
             
         elif self.state == State.hard:
