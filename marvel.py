@@ -212,6 +212,17 @@ class MyGame(arcade.Window):
             else:
                 self.score -= 1
             self.previous_time_penalty = self.time_penalty
+        
+        if self.score <= 0:
+            self.score = 25
+            self.questionNumber += 1
+            if self.questionNumber < 7:
+                functions.newMultipleChoice(self)
+            else:
+                self.questionNumber = 0
+                self.state = State.title_screen
+
+
 
         if self.frameskip and self.state == State.easy and self.frameskip_timer > 0.2:
             self.frameskip = False
