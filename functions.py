@@ -1,12 +1,14 @@
 import random
+import api
 
-#{'name':iron,'desc':{description:'', comics:[], films:[]}
+#{'name':iron,'desc':{description:'', comics:[]}
 #API dataset template^
 
 
-def modeSelection():
-    '''Selects mode'''
-    return
+#def modeSelection(easy):
+#    '''Should be called with argument True for easy, '''
+
+#    return
 
 
 def checkAnswerOpen(answerString, correctAnswer):
@@ -37,35 +39,29 @@ def anonimisation():
     return
 
 
-def getHint(dataset, prevHintType):
-    '''Takes Dataset, previous hint type, returns list of [hint, hintType], first hint always description'''
-    hintTypes = ['Description', 'Films', 'Comics', 'etc.']
+def getHint(prevHintType):
+    '''Takes previous hint type, returns list of [hint, hintType], first hint always description'''
+    
+    hintTypes = ['Description', 
     
     return
 
 
 def points(answer, correctAnswer, easy, hint):
     '''Starts on 25 and removes 1 for every wrong answer, 3 for every hint. Maybe boolean argument for "hint" or smth if false it must be a wrong answer so you remove 1, if true remove 3'''
-    counter = 0
-    if counter == 0:
-        points = 25
-    if easy == True:                                                        ##checks difficulty##
-        rightAnswer = checkAnswerMultipleChoice(answer, correctAnswer)      ##checks answer##
-        if hint == True:                                                    ##if hint is asked, subtracts 3 points##
+    if easy == True:              ##checks difficulty##
+        rightAnswer = checkAnswerMultipleChoice(answer, correctAnswer)     ##checks answer##
+        if hint == True:                ##if hint is asked, subtracts 3 points##
             points = points - 3
-            counter = counter + 1
         else:
-            if rightAnswer == False:                                        ##checks answer and assigns points depending on the answer##
+            if rightAnswer == False:        ##checks answer and assigns points depending on the answer##
                 points -= 1
-                counter = counter + 1
-    if easy == False:                                                       ##checks difficulty##
-        checkAnswerOpen(answer, correctAnswer)                              ##checks answer##
-        if hint == True:                                                    ##if hint is asked, subtracts 3 points##
+    if easy == False:             ##checks difficulty##
+        checkAnswerOpen(answer, correctAnswer)               ##checks answer##
+        if hint == True:                ##if hint is asked, subtracts 3 points##
             points = points - 3
-            counter = counter + 1
         else:
-            if rightAnswer == False:                                        ##checks answer and assigns points depending on the answer##
+            if rightAnswer == False:        ##checks answer and assigns points depending on the answer##
                 points = points - 1
-                counter = counter + 1
     return points
 
