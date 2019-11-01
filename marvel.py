@@ -106,44 +106,64 @@ class MyGame(arcade.Window): #here the creation of the game starts
         """ Constructor. """
         super().__init__(width, height, title, resizable=True)
         arcade.set_background_color(WINDOW_BACKGROUND_COLOR)
-        self.background = Background(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 'startscherm hoofd-1.png.png')
-        self.state = State.title_screen
-        self.name = str()
-        self.mode_buttons = arcade.SpriteList()
-        self.mode_buttons.append(StateButton(WINDOW_WIDTH/4 * 1, WINDOW_HEIGHT/2, 'Button.png', State.choose_difficulty, 'start'))
-        self.mode_buttons.append(StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.leaderboard, 'leaderboard'))
-        self.cursor = Cursor(0, 0, '1 pixel voor muis-1.png.png')
-        self.submit_name_button = StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.mode, 'ok')
+
+        # miscelanious
+        self.state = State.title_screen # which menu has to be drawn
+        self.name = str()               # username stored here
+        self.characterList = list() 
+        self.leaderboard_list = list()  # list of small dictionaries with names and scores
+        self.description = 'error'      # show error on places where description is drawn
+        self.previous_time_penalty = int()
+        self.openAnswer = str()         # type box in hard mode
+        self.tempString = str()         # temp srting for filtering description of name that has to be guessed
+        self.charNumber = int()
+        self.questionNumber = int()     # number of questions answered
+        self.previousDescription = str() # new description shouldn't be the same as previous description. previous description is stored here
+        self.correctCharacter = dict()  # a dictionary where the correct character is safed in
+        
+        # boolean
+        self.frameskip = False          # enables to draw a (couple of) frame(s) before loading the api
+        self.show_answer_button_timer = False
+
+        # buttons and classes
+        self.background = Background(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 'startscherm hoofd-1.png.png')    # make background image
+        self.hintButton = hintButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/1.5, 'Button.png')                   # hint button for easy mode
+        self.back_to_main_menu_button = StateButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/4 * 3, 'Button.png', State.mode, 'main menu')
+        
+        # buttons for difficulty
         self.difficulty_buttons = arcade.SpriteList()
         self.difficulty_buttons.append(StateButton(WINDOW_WIDTH/4 * 1, WINDOW_HEIGHT/2, 'Button.png', State.easy, 'easy'))
         self.difficulty_buttons.append(StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.hard, 'hard'))
+        
+        # buttons for start and leaderboar
+        self.mode_buttons = arcade.SpriteList()
+        self.mode_buttons.append(StateButton(WINDOW_WIDTH/4 * 1, WINDOW_HEIGHT/2, 'Button.png', State.choose_difficulty, 'start'))
+        self.mode_buttons.append(StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.leaderboard, 'leaderboard'))
+        
+        self.cursor = Cursor(0, 0, '1 pixel voor muis-1.png.png') # small invisible cursor for collision detection
+        self.submit_name_button = StateButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/2, 'Button.png', State.mode, 'ok') # name submit button on title screen
+        
+        # sprite lists
         self.possible_answer_buttons = arcade.SpriteList()
+        self.notation_button_list = arcade.SpriteList()
+        
+        # counter
+        self.time_penalty = int()
+        self.questionNumber = int()
+
+        # score
+        self.total_score = int()
+        self.score = 25
+
+        # timers
+        self.frameskip_timer = float()
         self.timer = int()
         self.delta_timer = float()
-        self.score = 25
-        self.characterList = list()
-        self.back_to_main_menu_button = StateButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/4 * 3, 'Button.png', State.mode, 'main menu')
-        self.leaderboard_list = list() #TODO: list with all the score paired with the names [[name, score], [name, score]] (SUSAN)
-        self.description = 'hier komt de hint te staan'
-        self.hint_penalty = int()
-        self.time_penalty = int()
-        self.time_wrong = int()
-        self.times_played = int()
-        self.hintButton = hintButton(WINDOW_WIDTH/2, WINDOW_HEIGHT/1.5, 'Button.png')
-        self.total_score = int()
-        self.previous_time_penalty = int()
-        self.openAnswer = str()
-        self.tempString = str()
-        self.charNumber = int()
-        self.frameskip = False
-        self.notation_button_list = arcade.SpriteList()
-        self.frameskip_timer = float()
-        self.questionNumber = int()
-        self.previousDescription = str()
-        self.score_display_timer = int()
-        self.correctCharacter = dict()
-        self.show_answer_button_timer = False
+        self.score_display_timer = int()        
         self.answer_button_timer = float()
+
+
+
 
 
 
