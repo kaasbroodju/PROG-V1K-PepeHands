@@ -16,4 +16,4 @@
     #print('name'.replace('name', "this character"))
 
 
-#character_sheet['data']['results'][0]['description'].replace(character_sheet['data']['results'][0]['name'], 'DATA RETRACTED')
+character_sheet['data']['results'][0]['description'].replace(character_sheet['data']['results'][0]['name'], 'DATA RETRACTED') #This is the one we ended up going with
