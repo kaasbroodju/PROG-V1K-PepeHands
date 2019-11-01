@@ -42,6 +42,7 @@ def get_leaderboard():
 
 def newMultipleChoice(self):
     '''Get new set of options of answer(buttons) for easy/multiple choice mode'''
+    self.notation_button_list = arcade.SpriteList()
     self.correctCharacter = api.get_character(True) #Get 'correct character' i.e. the answer we're looking for. Argument True so we get character description, comics and series.
     print(self.correctCharacter)
     self.characterList = [] #Empty character list

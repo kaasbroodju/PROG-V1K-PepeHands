@@ -2,8 +2,12 @@
     "data": {
         "players": [
             {
-                "name": "( ͡° ͜ʖ ͡°)",
+                "name": "( \u0361\u00b0 \u035c\u0296 \u0361\u00b0)",
                 "score": 175
+            },
+            {
+                "name": "OwO",
+                "score": 116
             }
         ]
     }

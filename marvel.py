@@ -141,6 +141,9 @@ class MyGame(arcade.Window):
         self.questionNumber = int()
         self.previousDescription = str()
         self.score_display_timer = int()
+        self.correctCharacter = dict()
+        self.show_answer_button_timer = False
+        self.answer_button_timer = float()
 
 
 
@@ -177,11 +180,12 @@ class MyGame(arcade.Window):
                 button.draw()
         elif self.state == State.hard:
             arcade.draw_text('hard', WINDOW_WIDTH/2,WINDOW_HEIGHT/4 *3.07, arcade.color.BLACK, 36, bold=True, align="center", anchor_x="center", anchor_y="center")
-            arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.5,arcade.color.BLACK, 18, bold=True, align="center", anchor_x="center", anchor_y="center", width=int(WINDOW_WIDTH/2.5))
+            arcade.draw_text(self.description, WINDOW_WIDTH/2,WINDOW_HEIGHT/4 * 2.80,arcade.color.BLACK, 18, bold=True, align="center", anchor_x="center", anchor_y="top")
             arcade.draw_text(str(self.score), WINDOW_WIDTH/4,WINDOW_HEIGHT/4 * 3,arcade.color.BLACK, 36, bold=True)
             arcade.draw_text(str(self.timer), WINDOW_WIDTH/4 * 3,WINDOW_HEIGHT/4 * 3 ,arcade.color.BLACK, 36, bold=True)
-            arcade.draw_text('Input: '+ self.openAnswer, WINDOW_WIDTH*2.4/8,WINDOW_HEIGHT*1.7/4 ,arcade.color.BLACK, 24, bold=True)
-
+            arcade.draw_text('Input: '+ self.openAnswer, WINDOW_WIDTH/8*2.4,WINDOW_HEIGHT/8 * 2 ,arcade.color.BLACK, 24, bold=True)
+            for button in self.notation_button_list:
+                button.draw()
 
 
         elif self.state == State.leaderboard:
@@ -223,10 +227,10 @@ class MyGame(arcade.Window):
                 self.score -= 1
             self.previous_time_penalty = self.time_penalty
         
-        if self.score <= 0:
+        if self.score <= 0 and self.state == State.easy:
             self.score = 25
             self.questionNumber += 1
-            if self.questionNumber < 7:
+            if self.questionNumber < 6:
                 functions.newMultipleChoice(self)
             else:
                 self.questionNumber = 0
@@ -237,7 +241,6 @@ class MyGame(arcade.Window):
             self.frameskip = False
             self.frameskip_timer = float()
             functions.newMultipleChoice(self)
-            self.notation_button_list = arcade.SpriteList()
         elif self.frameskip:
             self.frameskip_timer += delta_time
 
@@ -252,12 +255,74 @@ class MyGame(arcade.Window):
                 self.leaderboard_list = functions.sort_leaderbord(self.leaderboard_list)
                 self.leaderboard_list.reverse()
 
+        if self.score <= 0 and self.state == State.hard:
+            self.score = 25
+            self.questionNumber += 1
+            if self.questionNumber < 6:
+                self.correctCharacter = api.get_character(True)
+                self.description = self.correctCharacter['desc']['desc']
+                self.charNumber = 0
+                for char in self.description:
+                    if self.charNumber >= 30 and char == ' ':
+                        self.tempString += '\n'
+                        self.charNumber = 0
+                    self.tempString += char
+                    self.charNumber += 1
+                self.description = self.tempString
+                self.tempString = ''
+                #self.notation_button_list = arcade.SpriteList()
+                self.total_score += self.score
+                self.score = 25
+                self.frameskip = False
+                self.questionNumber += 1
+                self.frameskip_timer = 0.0
+                self.timer = 0
+            else:
+                self.questionNumber = 0
+                self.state = State.score_display
+            self.notation_button_list = arcade.SpriteList()
+            self.answer_button_timer = 0.0
+
+        if self.state == State.hard:
+            if self.show_answer_button_timer:
+                self.answer_button_timer += delta_time
+
+            if self.answer_button_timer > 2 and self.show_answer_button_timer:
+                self.notation_button_list = arcade.SpriteList()
+                self.answer_button_timer = 0.0
+
+            if self.frameskip and self.frameskip_timer > 0.2:
+                if self.questionNumber < 6:
+                    self.correctCharacter = api.get_character(True)
+                    self.description = self.correctCharacter['desc']['desc']
+                    self.charNumber = 0
+                    for char in self.description:
+                        if self.charNumber >= 30 and char == ' ':
+                            self.tempString += '\n'
+                            self.charNumber = 0
+                        self.tempString += char
+                        self.charNumber += 1
+                    self.description = self.tempString
+                    self.tempString = ''
+                    #self.notation_button_list = arcade.SpriteList()
+                    self.total_score += self.score
+                    self.score = 25
+                    self.frameskip = False
+                    self.questionNumber += 1
+                    self.frameskip_timer = 0.0
+                    self.timer = 0
+                else:
+                    self.questionNumber = 0
+                    self.state = State.score_display
+
+
+
         
     def on_key_press(self, key, modifiers):
         """ Called whenever the user presses a key. """
         if self.state == State.title_screen:
 
-            if key != arcade.key.BACKSPACE and chr(key).lower() in 'abcdefghijklmnopqrstuvwxyz1234567890' and len(self.name) < 10: #geen back space en filter
+            if key != arcade.key.BACKSPACE and chr(key).lower() in 'abcdefghijklmnopqrstuvwxyz1234567890-. ' and len(self.name) < 10: #geen back space en filter
                 if modifiers == 17 or modifiers == 1: #shift voor hoofdletter
                     self.name += str(chr(key)).upper()
                 else:
@@ -265,13 +330,24 @@ class MyGame(arcade.Window):
             elif key == arcade.key.BACKSPACE:
                 self.name = self.name[:-1]
         elif self.state == State.hard:
-            if key != arcade.key.BACKSPACE and chr(key).lower() in 'abcdefghijklmnopqrstuvwxyz1234567890' and len(self.openAnswer) < 21: #geen back space en filter
+            if key != arcade.key.BACKSPACE and chr(key).lower() in 'abcdefghijklmnopqrstuvwxyz1234567890-. ' and len(self.openAnswer) < 21: #geen back space en filter
                 if modifiers == 17 or modifiers == 1: #shift voor hoofdletter
                     self.openAnswer += str(chr(key)).upper()
                 else:
                     self.openAnswer += str(chr(key))
             elif key == arcade.key.BACKSPACE:
                 self.openAnswer = self.openAnswer[:-1]
+            #jshfgkjsdggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+            elif key == arcade.key.ENTER:
+                if self.openAnswer == self.correctCharacter['name']:
+                    self.frameskip = True
+                    self.notation_button_list.append(AnswerButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/8 * 2, 'Correct.png'))
+                    self.show_answer_button_timer = True
+                else:
+                    self.notation_button_list.append(AnswerButton(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/8 * 2, 'Wrong.png'))
+                    self.show_answer_button_timer = True
+                    self.score -= 1
+                self.openAnswer = ''
             """
             TODO:
             wanneer enter is gedrukt kijken of het goed is
@@ -307,6 +383,20 @@ class MyGame(arcade.Window):
                 self.timer = 0
                 if button.state == State.easy:
                     functions.newMultipleChoice(self)
+                elif button.state == State.hard:
+                    self.notation_button_list = arcade.SpriteList()
+                    self.correctCharacter = api.get_character(True)
+                    self.description = self.correctCharacter['desc']['desc']
+                    self.charNumber = 0
+                    for char in self.description:
+                        if self.charNumber >= 30 and char == ' ':
+                            self.tempString += '\n'
+                            self.charNumber = 0
+                        self.tempString += char
+                        self.charNumber += 1
+                    self.description = self.tempString
+                    self.tempString = ''
+                    self.timer = 0
         elif self.state == State.easy:
             cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.possible_answer_buttons)
             for button in cursor_collides_with:
@@ -324,14 +414,12 @@ class MyGame(arcade.Window):
                     else:
                         self.questionNumber = 0
                         self.state = State.score_display
-                        pass #TODO: write name + score to json (susan)
                 else:
                     if self.score <= 0:
                         self.score = 0
                     else:
                         self.score -= 1
                     self.notation_button_list.append(AnswerButton(button.center_x, button.center_y, 'Wrong.png'))
-                    pass #TODO: make wrong button spritelist append? morris
             if arcade.check_for_collision(self.cursor, self.hintButton):
                 self.previousDescription
                 while True: 
@@ -358,23 +446,11 @@ class MyGame(arcade.Window):
                 
                 if self.score > 0:    
                     self.score -= 3
-            
-            
-        elif self.state == State.hard:
-            pass
-
 
         elif self.state == State.leaderboard:
             if arcade.check_for_collision(self.cursor, self.back_to_main_menu_button):
                 self.state = self.back_to_main_menu_button.state
-        elif self.state == State.easy:
-            """
-            TODO
-            als op de juiste button word gedrukt dan nieuwe characters zoeken
-            als foute button penalty omhoog en wrong button naast de button die is gedrukt
-            na 7 keer gespeelt schrijf score in file (en laat laatste score aan player zien)
-            """
-            pass
+     
 
 def main():
     """ Create an instance of our game window and start the Arcade game loop. """
