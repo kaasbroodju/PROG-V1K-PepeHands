@@ -336,7 +336,7 @@ class MyGame(arcade.Window): #here the creation of the game starts
                     self.openAnswer += str(chr(key))
             elif key == arcade.key.BACKSPACE: #checks if a backspace is used
                 self.openAnswer = self.openAnswer[:-1]
-            #jshfgkjsdggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+            
             elif key == arcade.key.ENTER: #defines what happens upon pressing the enter button
                 if self.openAnswer == self.correctCharacter['name']: #checks if the answer is equal to the correct answer
                     self.frameskip = True
