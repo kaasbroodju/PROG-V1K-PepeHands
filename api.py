@@ -11,8 +11,8 @@ def get_json_file(standaard='http://gateway.marvel.com/v1/public/characters'):
     returns a dictionary
     '''
     timestamp = str(time.time())            # get time for time stamp
-    private_key = "2acdb82a84ec3870b21de291b90755ddcb0f6d6b"    # private key
-    public_key = "28624c577d2a5ae05547164c7f3c06a2"             # public key
+    private_key = "4fdbc63596bbbad52be7b3e42a548cc9f2b6e80f"    # private key
+    public_key = "33ed4e91e1467eb433e2bf85cb71abe7"             # public key
 
     # encrypt request
     hash = hashlib.md5( (timestamp+private_key+public_key).encode('utf-8') )
