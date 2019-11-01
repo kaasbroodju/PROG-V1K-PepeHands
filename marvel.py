@@ -356,7 +356,7 @@ class MyGame(arcade.Window): #here the creation of the game starts
                     self.openAnswer += str(chr(key))
             elif key == arcade.key.BACKSPACE: #checks if a backspace is used
                 self.openAnswer = self.openAnswer[:-1]
-            #jshfgkjsdggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+            
             elif key == arcade.key.ENTER: #defines what happens upon pressing the enter button
                 if self.openAnswer == self.correctCharacter['name']: #checks if the answer is equal to the correct answer
                     self.frameskip = True
@@ -383,92 +383,92 @@ class MyGame(arcade.Window): #here the creation of the game starts
         self.cursor.center_y = y 
 
     def on_mouse_release(self, x, y, button, modifiers):
-        #(TODO) alleen op rechter muis knop
-        if self.state == State.mode:
+        '''Following code is executed whenever a mouse button is released'''
+        if self.state == State.mode:    #If we're on main menu
             cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.mode_buttons)
+            for button in cursor_collides_with: #For any button the mouse 'collides with' i.e. the button we clicked on
+                self.state = button.state       #We change the state (the screen we're on) to the one of the button
+                if self.state == State.leaderboard: #If that state is leaderboard
+                    self.leaderboard_list = functions.get_leaderboard()                         #We call our
+                    self.leaderboard_list = functions.sort_leaderbord(self.leaderboard_list)    #leaderboard functions
+                    self.leaderboard_list.reverse()                                             #so that we can draw the leaderboard (happens in on_draw)
+        elif self.state == State.title_screen:  #If we're on the title screen
+            if arcade.check_for_collision(self.cursor, self.submit_name_button) and len(self.name) >= 3:    #Check if name is at least 3 characters and we click on the 'ok' button
+                self.state = self.submit_name_button.state #Change state to main menu
+        elif self.state == State.choose_difficulty: #If We're on difficulty select screen
+            cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.difficulty_buttons)   #Check for collisions
             for button in cursor_collides_with:
-                self.state = button.state
-                if self.state == State.leaderboard:
-                    self.leaderboard_list = functions.get_leaderboard()
-                    self.leaderboard_list = functions.sort_leaderbord(self.leaderboard_list)
-                    self.leaderboard_list.reverse()
-        elif self.state == State.title_screen:
-            if arcade.check_for_collision(self.cursor, self.submit_name_button) and len(self.name) >= 3:
-                self.state = self.submit_name_button.state
-        elif self.state == State.choose_difficulty:
-            cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.difficulty_buttons)
+                self.state = button.state #Change state to button state (easy or hard)
+                self.timer = 0 #Set the ingame timer 0
+                if button.state == State.easy: #If the button state is easy
+                    functions.newMultipleChoice(self)   #We call our function that gives us our multiple choice answers/options
+                elif button.state == State.hard:    #If the button state is hard
+                    self.notation_button_list = arcade.SpriteList() #List of correct and wrong 
+                    self.correctCharacter = api.get_character(True) #We get a character + description, this will be correct answer
+                    self.description = self.correctCharacter['desc']['desc']    #Save the description of correctcharacter to a variable
+                    self.charNumber = 0 #Temp variable
+                    for char in self.description:                   #|
+                        if self.charNumber >= 30 and char == ' ':   #Add in new lines (\n) on
+                            self.tempString += '\n'                 #the next space every 30 characters
+                            self.charNumber = 0                     #|
+                        self.tempString += char                     #|
+                        self.charNumber += 1                        #|
+                    self.description = self.tempString              #|
+                    self.tempString = ''                            #|
+                    self.timer = 0  #Reset timer
+        elif self.state == State.easy:  #If we're in gamemode easy
+            cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.possible_answer_buttons)  #Check for collisions
             for button in cursor_collides_with:
-                self.state = button.state
-                self.timer = 0
-                if button.state == State.easy:
-                    functions.newMultipleChoice(self)
-                elif button.state == State.hard:
-                    self.notation_button_list = arcade.SpriteList()
-                    self.correctCharacter = api.get_character(True)
-                    self.description = self.correctCharacter['desc']['desc']
-                    self.charNumber = 0
-                    for char in self.description:
-                        if self.charNumber >= 30 and char == ' ':
-                            self.tempString += '\n'
-                            self.charNumber = 0
-                        self.tempString += char
-                        self.charNumber += 1
-                    self.description = self.tempString
-                    self.tempString = ''
-                    self.timer = 0
-        elif self.state == State.easy:
-            cursor_collides_with = arcade.check_for_collision_with_list(self.cursor, self.possible_answer_buttons)
-            for button in cursor_collides_with:
-                if functions.checkAnswerMultipleChoice(button.character, self.correctCharacter['name']):
-                    if self.score < 0:
-                        self.score = 0
-                    self.total_score += self.score
-                    if self.questionNumber < 6:
-                        self.notation_button_list.append(AnswerButton(button.center_x, button.center_y, 'Correct.png'))
-                        self.timer = 0
-                        self.delta_timer = 0
-                        self.questionNumber += 1
-                        self.frameskip = True
+                if functions.checkAnswerMultipleChoice(button.character, self.correctCharacter['name']):    #If given answer is correct
+                    if self.score < 0:  #If score is somehow under 0
+                        self.score = 0  #set score to 0
+                    self.total_score += self.score #Add score for this question to total score
+                    if self.questionNumber < 6: #If we're not on the last question yet
+                        self.notation_button_list.append(AnswerButton(button.center_x, button.center_y, 'Correct.png')) #Add the correct checkmark
+                        self.timer = 0  #Reset timer
+                        self.delta_timer = 0    #Reset timer
+                        self.questionNumber += 1    #Add on to question number
+                        self.frameskip = True   #Timing stuff to make sure that the checkmark appears before we start contacting the api
                         self.score = 26 #1 point is removed at start of new question, compensate with increasing score by 1 beforehand
+                    else:   #That was the last question
+                        self.questionNumber = 0 #Reset question number for next round
+                        self.state = State.score_display    #Move on to score screen
+                else:   #If answer is not correct
+                    if self.score <= 0: #Make sure 
+                        self.score = 0  #score doesnt go under 0
                     else:
-                        self.questionNumber = 0
-                        self.state = State.score_display
-                else:
-                    if self.score <= 0:
-                        self.score = 0
-                    else:
-                        self.score -= 1
-                    self.notation_button_list.append(AnswerButton(button.center_x, button.center_y, 'Wrong.png'))
-            if arcade.check_for_collision(self.cursor, self.hintButton):
-                self.previousDescription
-                while True: 
-                    comicOrSeries = random.randint(0, 1)                                                #
-                    if comicOrSeries == 0 and len(self.correctCharacter['desc']['comics'])-1 >= 1:                                                          #t
-                        self.description = self.correctCharacter['desc']['comics'][random.randint(0, len(self.correctCharacter['desc']['comics'])-1)]       #e
-                        if self.description == self.previousDescription:                                                                                    #s
-                            continue                                                                                                                        #t
+                        self.score -= 1 #Deduct 1 from score
+                    self.notation_button_list.append(AnswerButton(button.center_x, button.center_y, 'Wrong.png'))   #Add wrong mark
+            if arcade.check_for_collision(self.cursor, self.hintButton):    #Check for collision
+                self.previousDescription                                                                                                                    #
+                while True:                                                                                                                                 #
+                    comicOrSeries = random.randint(0, 1)                                                                                                    #Make sure we get good
+                    if comicOrSeries == 0 and len(self.correctCharacter['desc']['comics'])-1 >= 1:                                                          #hints that are not
+                        self.description = self.correctCharacter['desc']['comics'][random.randint(0, len(self.correctCharacter['desc']['comics'])-1)]       #the same as the last one
+                        if self.description == self.previousDescription:                                                                                    #
+                            continue                                                                                                                        #
                         break                                                                                                                               #
-                    elif comicOrSeries == 0 and len(self.correctCharacter['desc']['series'])-1 >= 1:                                                        #p
-                        self.description = self.correctCharacter['desc']['series'][random.randint(0, len(self.correctCharacter['desc']['series'])-1)]       #l
-                        if self.description == self.previousDescription:                                                                                    #z
-                            continue
-                        break
-                self.charNumber = 0
-                for char in self.description:
-                    if self.charNumber >= 30 and char == ' ':
-                        self.tempString += '\n'
-                        self.charNumber = 0
-                    self.tempString += char
-                    self.charNumber += 1
-                self.description = self.tempString
-                self.tempString = ''
+                    elif comicOrSeries == 0 and len(self.correctCharacter['desc']['series'])-1 >= 1:                                                        #
+                        self.description = self.correctCharacter['desc']['series'][random.randint(0, len(self.correctCharacter['desc']['series'])-1)]       #
+                        if self.description == self.previousDescription:                                                                                    #
+                            continue                                                                                                                        #
+                        break                                                                                                                               #
+                self.charNumber = 0                                 #|
+                for char in self.description:                       #|
+                    if self.charNumber >= 30 and char == ' ':       #Add in new lines (\n)
+                        self.tempString += '\n'                     #the first space after
+                        self.charNumber = 0                         #every 30 characters
+                    self.tempString += char                         #|
+                    self.charNumber += 1                            #|
+                self.description = self.tempString                  #|
+                self.tempString = ''                                #|
                 
-                if self.score > 0:    
-                    self.score -= 3
+                if self.score > 0:    #If score is great than zero
+                    self.score -= 3   #Decut 3 from score
 
-        elif self.state == State.leaderboard:
-            if arcade.check_for_collision(self.cursor, self.back_to_main_menu_button):
-                self.state = self.back_to_main_menu_button.state
+        elif self.state == State.leaderboard:   #If we're on leaderboard screen
+            if arcade.check_for_collision(self.cursor, self.back_to_main_menu_button):  #Check for collision
+                self.state = self.back_to_main_menu_button.state #Go back to main menu if we click on back button
      
 
 def main():
