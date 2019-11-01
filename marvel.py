@@ -337,7 +337,7 @@ class MyGame(arcade.Window):
                     self.openAnswer += str(chr(key))
             elif key == arcade.key.BACKSPACE:
                 self.openAnswer = self.openAnswer[:-1]
-            #jshfgkjsdggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+            
             elif key == arcade.key.ENTER:
                 if self.openAnswer == self.correctCharacter['name']:
                     self.frameskip = True
@@ -348,13 +348,7 @@ class MyGame(arcade.Window):
                     self.show_answer_button_timer = True
                     self.score -= 1
                 self.openAnswer = ''
-            """
-            TODO:
-            wanneer enter is gedrukt kijken of het goed is
-            als het goed is na volgende charater
-            als fout opnieuw raden (input resetten)
-            na 7 keer gespeelt schrijf score in file (en laat laatste score aan player zien)
-            """
+            
 
     def on_key_release(self, key, modifiers):
         pass
