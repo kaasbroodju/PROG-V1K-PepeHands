@@ -4,16 +4,9 @@ import marvel
 import arcade
 import json
 
-#{'name':iron,'desc':{'desc':'', 'comics':[], 'series':[]}
-#API dataset template^
 
-
-#def modeSelection(easy):
-#    '''Should be called with argument True for easy, '''
-
-#    return
-
-def write_to_json(name, score): #maybe add mode
+def write_to_json(name, score): 
+    '''Writes name and score to leaderboard'''
     with open('leaderboard.json') as file:
         data = json.load(file)
     data['data']['players'].append({'name': name, 'score': score})
@@ -21,16 +14,18 @@ def write_to_json(name, score): #maybe add mode
     json.dump(data, file, indent=4)
 
 def sort_leaderbord(leaderboard):
+    '''Sorting algorithm for leaderboard'''
     #bubble sort
     x = len(leaderboard)
     for y in range(x):
         for z in range(0, x-y-1):
-            # swap elementen
+            # swap elements
             if leaderboard[z]['score'] > leaderboard[z+1]['score'] :
                 leaderboard[z], leaderboard[z+1] = leaderboard[z+1], leaderboard[z]
     return leaderboard
     
 def get_leaderboard():
+    '''Gets list of players and their scores'''
     with open('leaderboard.json') as file:
         data = json.load(file)
     return data['data']['players']
@@ -98,16 +93,6 @@ def checkAnswerMultipleChoice(answer, correctAnswer):
     return rightAnswer
 
 
-def apiFilter():
-    '''Filters API data'''
-    return
-
-
-def anonimisation():
-    '''Takes hero's name and removes from any hint text. For example replace with [data redacted].'''
-    return
-
-
 """
 LEGACY Jasper
 Implemented elsewere in different form
@@ -130,9 +115,12 @@ def points(answer, correctAnswer, easy, hint):
                 points = points - 1
     return points
 """
+"""
+LEGACY susan
+niet geimplenteerd
 
 def give_nickname():
-    """Asks the user for a username and returns this as string."""
+    \"""Asks the user for a username and returns this as string.\"""
     nickname = input('Nickname: ')
     file = 'scoreboard.json'
     try:
@@ -148,8 +136,8 @@ def give_nickname():
         return nickname
 
 def write_to_scoreboard(points):
-    """Takes the amount of points earned by player as input. Asks the user to choose a nickname and writes the chosen
-    nickname and earned score to a jsonfile."""
+    \"\"\"Takes the amount of points earned by player as input. Asks the user to choose a nickname and writes the chosen
+    nickname and earned score to a jsonfile.\"\"\"
     file = 'scoreboard.json'
     nickname = give_nickname()
     dict_scores = {}
@@ -167,8 +155,8 @@ def write_to_scoreboard(points):
         json_content = json.dump(output, json_file, indent=4)
 
 def leaderboard():
-    """Reads file 'Scoreboard.json', returns a sorted list of the scores with nicknames. Begins with the highest
-    element."""
+    \"""Reads file 'Scoreboard.json', returns a sorted list of the scores with nicknames. Begins with the highest
+    element.\"""
     file = 'scoreboard.json'
     leaderboard_list = []
     with open(file, 'r') as json_file:
@@ -176,3 +164,4 @@ def leaderboard():
         data = data['scores']
         leaderboard_list = sorted(data.items(), key=lambda x: x[1], reverse=True)
     return leaderboard_list
+"""
